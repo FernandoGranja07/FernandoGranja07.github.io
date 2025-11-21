@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FINBOT Web</title>
+  <link rel="icon" href="./assets/logo-finbot-web.png" type="image/png" />
+  <meta property="og:image" content="./assets/logo-finbot-web.png" />
+  
+  <!-- Add these libraries in the head section -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="./styles.css?v=1" />
+  <script>
+    // Make jsPDF available globally
+    window.jsPDF = window.jspdf.jsPDF;
+  </script>
+</head>
+<body>
+  <!-- Your existing header and navigation -->
+  <header class="row between">
+    <div class="row">
+      <a href="./index.html" aria-label="Ir a portada">
+        <img src="./assets/logo-finbot-web.png" alt="FINBOT Web" style="height:32px;width:auto;margin-right:10px;display:block" />
+      </a>
+      <h1>FINBOT Web</h1>
+      <span class="muted">Análisis financiero multiperiodo</span>
+    </div>
+    <div class="row gap">
+      <label>Nombre de empresa
+        <input id="empresaInput" type="text" placeholder="Ej. ACME S.A." />
+      </label>
+      <label>Añadir periodo (año)
+        <input id="nuevoPeriodoInput" type="number" min="1900" max="2100" placeholder="2025" />
+      </label>
+      <button id="agregarPeriodoBtn" class="btn">Añadir periodo</button>
+      <label>Periodo activo
+        <select id="periodoActivoSelect"></select>
+      </label>
+    </div>
+  </header>
+
+  <!-- Your existing navigation and content -->
+
+
+
+
+
+  <nav class="tabs row wrap">
+    <button class="tab-btn active" data-tab="datos">Datos</button>
+    <button class="tab-btn" data-tab="analisis">Análisis</button>
+    <button class="tab-btn" data-tab="razones">Razones</button>
+    <button class="tab-btn" data-tab="valoracion">Valoración</button>
+    <button class="tab-btn" data-tab="eoaf">EOAF</button>
+    <button class="tab-btn" data-tab="efe">EFE</button>
+    <button class="tab-btn" data-tab="dupont">DuPont</button>
+    <button class="tab-btn" data-tab="ia">IA</button>
+    <button class="tab-btn" data-tab="global">Resumen Global</button>
+    <button class="tab-btn" data-tab="reportes">Reportes</button>
+    <button class="tab-btn" data-tab="graficos">Gráficos</button>
+    <button class="tab-btn" data-tab="proforma">Proforma</button>
+    <button class="tab-btn" data-tab="exportar">Exportar</button>
+    <button class="tab-btn" data-tab="almacen">Almacenamiento</button>
+  </nav>
+
+  <main>
+    <!-- DATOS -->
+    <section id="tab-datos" class="tab-content active">
+      <div class="grid">
+        <div class="card">
+          <h3>Agregar cuenta</h3>
+          <div class="grid">
+            <label>Tipo de estado
+              <select id="tipoEstado">
+                <option value="BG">BG</option>
+                <option value="ER">ER</option>
+              </select>
+            </label>
+            <label>Nombre de cuenta
+              <input id="nombreCuenta" type="text" placeholder="Ej. Inventario / Ventas al crédito / Intereses" />
+            </label>
+            <label>Monto
+              <input id="montoCuenta" type="number" step="any" placeholder="0.00" />
+            </label>
+            <label>Clasificación
+              <select id="clasificacionCuenta"></select>
+            </label>
+            <label>¿Operativa?
+              <select id="operativaCuenta">
+                <option value="si">sí</option>
+                <option value="no">no</option>
+              </select>
+            </label>
+          </div>
+          <div class="row">
+            <button id="agregarCuentaBtn" class="btn primary">Agregar</button>
+          </div>
+          <div id="formError" class="muted"></div>
+        </div>
+
+        <div class="card">
+          <h3>Acciones de datos</h3>
+          <div class="row wrap gap">
+            <button id="exportarJsonBtn" class="btn">Exportar JSON</button>
+            <label class="btn">
+              Importar JSON
+              <input id="importarJsonInput" type="file" accept=".json" style="display:none" />
+            </label>
+            <button id="cargarDemoBtn" class="btn">Cargar Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Balance General (Periodo activo)</h3>
+          <div class="scroll">
+            <table id="tablaBG">
+              <thead>
+                <tr>
+                  <th>Cuenta</th>
+                  <th>Clasif.</th>
+                  <th>Oper.</th>
+                  <th class="num">Monto</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Estado de Resultados (Periodo activo)</h3>
+          <div class="scroll">
+            <table id="tablaER">
+              <thead>
+                <tr>
+                  <th>Cuenta</th>
+                  <th>Clasif.</th>
+                  <th>Oper.</th>
+                  <th class="num">Monto</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANALISIS -->
+    <section id="tab-analisis" class="tab-content">
+      <div class="card">
+        <h3>Análisis Horizontal (AH)</h3>
+        <div class="row gap wrap">
+          <label>Periodo base
+            <select id="ahBaseSelect"></select>
+          </label>
+          <label>Periodo comparado
+            <select id="ahCompSelect"></select>
+          </label>
+          <button id="calcAhBtn" class="btn">Calcular AH</button>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <h4>BG — AH</h4>
+            <div class="scroll">
+              <table id="tablaAHBG">
+                <thead>
+                  <tr>
+                    <th>Cuenta</th>
+                    <th class="num">Base</th>
+                    <th class="num">Comparado</th>
+                    <th class="num">Δ Abs</th>
+                    <th class="num">Δ %</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <h4>ER — AH</h4>
+            <div class="scroll">
+              <table id="tablaAHER">
+                <thead>
+                  <tr>
+                    <th>Cuenta</th>
+                    <th class="num">Base</th>
+                    <th class="num">Comparado</th>
+                    <th class="num">Δ Abs</th>
+                    <th class="num">Δ %</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Análisis Vertical (AV) sobre periodo activo</h3>
+        <div class="grid">
+          <div class="card">
+            <h4>BG — AV</h4>
+            <div class="scroll">
+              <table id="tablaAVBG">
+                <thead>
+                  <tr>
+                    <th>Cuenta</th>
+                    <th>Clasif.</th>
+                    <th class="num">% sobre TA/TPP</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <h4>ER — AV</h4>
+            <div class="scroll">
+              <table id="tablaAVER">
+                <thead>
+                  <tr>
+                    <th>Cuenta</th>
+                    <th>Clasif.</th>
+                    <th class="num">% sobre Ventas</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RAZONES -->
+    <section id="tab-razones" class="tab-content">
+      <div class="card">
+        <h3>Razones financieras</h3>
+        <div class="row gap wrap">
+          <label>Periodo
+            <select id="razonesPeriodoSelect"></select>
+          </label>
+        </div>
+        <div id="razonesGrid" class="reasons-grid"></div>
+        <div id="razonDetalle" class="card reason-detail hidden">
+          <div class="row between">
+            <div>
+              <div class="badge" id="razonGrupo">Grupo</div>
+              <h4 id="razonNombre" style="margin:6px 0 2px;">Nombre de la razón</h4>
+              <div class="muted" id="razonValor">Valor</div>
+            </div>
+          </div>
+          <div class="result" id="razonInterpretacion" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>CNT y CNO</h3>
+        <div class="row gap wrap">
+          <label>Periodo
+            <select id="cntcnoPeriodoSelect"></select>
+          </label>
+        </div>
+        <div id="cntcnoGrid" class="kpi-grid"></div>
+      </div>
+    </section>
+
+    <!-- VALORACION -->
+    <section id="tab-valoracion" class="tab-content">
+      <div class="card">
+        <h3>Valoración de la empresa</h3>
+        <div class="grid">
+          <label>Periodo
+            <select id="valPeriodoSelect"></select>
+          </label>
+          <label>N° de acciones
+            <input id="valAcciones" type="number" min="1" step="1" placeholder="1000000" />
+          </label>
+          <label>Tasa de descuento (%)
+            <input id="valTasa" type="number" step="0.01" placeholder="12" />
+          </label>
+          <label>Crecimiento a largo plazo (%)
+            <input id="valCrec" type="number" step="0.01" placeholder="3" />
+          </label>
+          <label>Múltiplo P/E
+            <input id="valPE" type="number" step="0.1" placeholder="10" />
+          </label>
+        </div>
+        <div class="row gap wrap">
+          <button id="calcValBtn" class="btn primary">Calcular valoración</button>
+        </div>
+        <pre id="valResultado" class="scroll"></pre>
+      </div>
+    </section>
+
+    <!-- EOAF -->
+    <section id="tab-eoaf" class="tab-content">
+      <div class="card">
+        <h3>EOAF</h3>
+        <div class="row gap wrap">
+          <label>Periodo base
+            <select id="eoafBaseSelect"></select>
+          </label>
+          <label>Periodo comparado
+            <select id="eoafCompSelect"></select>
+          </label>
+          <button id="calcEoafBtn" class="btn">Calcular EOAF</button>
+        </div>
+        <div class="scroll">
+          <table id="tablaEOAF">
+            <thead>
+              <tr>
+                <th>Cuenta</th>
+                <th>Clasif.</th>
+                <th class="num">Año 1</th>
+                <th class="num">Año 2</th>
+                <th class="num">Cambios</th>
+                <th class="num">Origen</th>
+                <th class="num">Aplicación</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- EFE -->
+    <section id="tab-efe" class="tab-content">
+      <div class="card">
+        <h3>Estado de Flujo de Efectivo (EFE)</h3>
+        <div class="row gap wrap">
+          <label>Periodo base
+            <select id="efeBaseSelect"></select>
+          </label>
+          <label>Periodo comparado
+            <select id="efeCompSelect"></select>
+          </label>
+          <label>Método
+            <select id="efeMetodoSelect">
+              <option value="indirecto">Indirecto</option>
+              <option value="directo">Directo</option>
+            </select>
+          </label>
+          <button id="calcEfeBtn" class="btn">Calcular EFE</button>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <h4>Resultado</h4>
+            <div class="scroll">
+              <table id="tablaEFE">
+                <thead>
+                  <tr>
+                    <th>Concepto</th>
+                    <th class="num">Monto</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DUPONT -->
+    <section id="tab-dupont" class="tab-content">
+      <div class="card">
+        <h3>Modelo DuPont (3 pasos)</h3>
+        <div class="row gap wrap">
+          <label>Periodo
+            <select id="dupPeriodoSelect"></select>
+          </label>
+        </div>
+        <div class="scroll">
+          <table id="tablaDuPont">
+            <thead>
+              <tr>
+                <th>Componente</th>
+                <th class="num">Valor</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- IA -->
+    <section id="tab-ia" class="tab-content">
+      <div class="card">
+        <h3>IA local (heurística)</h3>
+        <div class="row gap wrap">
+          <button id="prepararResumenBtn" class="btn">Preparar resumen</button>
+          <button id="generarIABtn" class="btn primary">Generar interpretación (local)</button>
+        </div>
+        <pre id="iaSalida" class="scroll"></pre>
+      </div>
+    </section>
+
+    <!-- RESUMEN GLOBAL -->
+    <section id="tab-global" class="tab-content">
+      <div class="card">
+        <h3>Resumen Global (IA por periodos y grupos)</h3>
+        <div class="row gap wrap">
+          <button id="generarGlobalBtn" class="btn primary">Generar Resumen Global</button>
+        </div>
+        <pre id="globalSalida" class="scroll"></pre>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section id="tab-reportes" class="tab-content">
+      <div class="card">
+        <h3>Reportes</h3>
+        <div class="row gap wrap">
+          <button id="descargarTxtBtn" class="btn">Descargar Resumen (.txt)</button>
+          <button id="descargarJsonBtn" class="btn">Descargar Datos (.json)</button>
+        </div>
+        <div id="reportResumen" class="result"></div>
+      </div>
+    </section>
+
+<section id="tab-graficos" class="tab-content">
+  <div class="card" style="width: 100%; max-width: 100%; box-sizing: border-box; padding: 0;">
+    <div style="padding: 1.5rem;">
+      <h3>Gráficos por categoría</h3>
+      <div class="row gap wrap" style="margin-bottom: 1.5rem;">
+        <label>Periodo base
+          <select id="grafBaseSelect"></select>
+        </label>
+        <label>Periodo comparado
+          <select id="grafCompSelect"></select>
+        </label>
+        <label>Top N
+          <select id="grafTopNSelect">
+            <option>5</option>
+            <option selected>10</option>
+            <option>15</option>
+            <option>20</option>
+          </select>
+        </label>
+        <label>Ordenar por
+          <select id="grafOrdenSelect">
+            <option value="deltaAbs" selected>Variación absoluta</option>
+            <option value="deltaPct">Variación porcentual</option>
+            <option value="valor">Valor</option>
+          </select>
+        </label>
+        <label>Mostrar
+          <select id="grafValorSelect">
+            <option value="monto" selected>Monto</option>
+            <option value="porc">Porcentaje</option>
+          </select>
+        </label>
+        <button id="grafRenderAllBtn" class="btn primary">Actualizar todos</button>
+      </div>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
+
+      <!-- 1. Análisis Horizontal y Vertical -->
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="row between chart-header">
+            <h4>1. Análisis horizontal y vertical (BG / ER)</h4>
+            <div class="chart-controls row gap wrap">
+              <label>Tipo
+                <select class="chart-tipo" data-chart="AHBG">
+                  <option value="bar" selected>Barras</option>
+                  <option value="line">Líneas</option>
+                  <option value="radar">Araña</option>
+                  <option value="pie">Pastel</option>
+                  <option value="polarArea">Polar</option>
+                </select>
+              </label>
+              <label>Estilo
+                <select class="chart-estilo" data-chart="AHBG">
+                  <option value="classic" selected>Clásico</option>
+                  <option value="pastel">Pastel</option>
+                  <option value="contrast">Alto contraste</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartAHBG"></canvas>
+          </div>
+          <div class="chart-wrapper" style="margin-top: 1rem;">
+            <canvas id="chartAHER"></canvas>
+          </div>
+          <div class="chart-wrapper" style="margin-top: 1rem;">
+            <canvas id="chartAVBG"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Razones -->
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="row between chart-header">
+            <h4>2. Razones financieras (comparado)</h4>
+            <div class="chart-controls row gap wrap">
+              <label>Tipo
+                <select class="chart-tipo" data-chart="Razones">
+                  <option value="radar" selected>Araña</option>
+                  <option value="bar">Barras</option>
+                  <option value="line">Líneas</option>
+                  <option value="polarArea">Polar</option>
+                  <option value="pie">Pastel</option>
+                </select>
+              </label>
+              <label>Estilo
+                <select class="chart-estilo" data-chart="Razones">
+                  <option value="classic" selected>Clásico</option>
+                  <option value="pastel">Pastel</option>
+                  <option value="contrast">Alto contraste</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartRazones"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. CNT y CNO -->
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="row between chart-header">
+            <h4>3. Capital Neto de Trabajo (CNT) y CNO</h4>
+            <div class="chart-controls row gap wrap">
+              <label>Tipo
+                <select class="chart-tipo" data-chart="CNTCNO">
+                  <option value="bar" selected>Barras</option>
+                  <option value="line">Líneas</option>
+                  <option value="radar">Araña</option>
+                  <option value="polarArea">Polar</option>
+                  <option value="pie">Pastel</option>
+                </select>
+              </label>
+              <label>Estilo
+                <select class="chart-estilo" data-chart="CNTCNO">
+                  <option value="classic" selected>Clásico</option>
+                  <option value="pastel">Pastel</option>
+                  <option value="contrast">Alto contraste</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartCNTCNO"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. EOAF -->
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="row between chart-header">
+            <h4>4. EOAF (Origen y Aplicación de Fondos)</h4>
+            <div class="chart-controls row gap wrap">
+              <label>Tipo
+                <select class="chart-tipo" data-chart="EOAF">
+                  <option value="bar" selected>Barras</option>
+                  <option value="pie">Pastel</option>
+                  <option value="doughnut">Dona</option>
+                  <option value="polarArea">Polar</option>
+                  <option value="line">Líneas</option>
+                </select>
+              </label>
+              <label>Estilo
+                <select class="chart-estilo" data-chart="EOAF">
+                  <option value="classic" selected>Clásico</option>
+                  <option value="pastel">Pastel</option>
+                  <option value="contrast">Alto contraste</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartEOAF"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Estado de Flujo de Efectivo -->
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="row between chart-header">
+            <h4>5. Estado de Flujo de Efectivo</h4>
+            <div class="chart-controls row gap wrap">
+              <label>Tipo
+                <select class="chart-tipo" data-chart="EFE">
+                  <option value="bar" selected>Barras</option>
+                  <option value="line">Líneas</option>
+                  <option value="pie">Pastel</option>
+                  <option value="doughnut">Dona</option>
+                  <option value="polarArea">Polar</option>
+                </select>
+              </label>
+              <label>Estilo
+                <select class="chart-estilo" data-chart="EFE">
+                  <option value="classic" selected>Clásico</option>
+                  <option value="pastel">Pastel</option>
+                  <option value="contrast">Alto contraste</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartEFE"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. DuPont -->
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="row between chart-header">
+            <h4>6. Modelo DuPont (comparado)</h4>
+            <div class="chart-controls row gap wrap">
+              <label>Tipo
+                <select class="chart-tipo" data-chart="Dup">
+                  <option value="bar" selected>Barras</option>
+                  <option value="line">Líneas</option>
+                  <option value="radar">Araña</option>
+                  <option value="polarArea">Polar</option>
+                  <option value="pie">Pastel</option>
+                </select>
+              </label>
+              <label>Estilo
+                <select class="chart-estilo" data-chart="Dup">
+                  <option value="classic" selected>Clásico</option>
+                  <option value="pastel">Pastel</option>
+                  <option value="contrast">Alto contraste</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartDup"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .chart-container {
+    width: 100%;
+    padding: 0 1.5rem 1.5rem;
+    box-sizing: border-box;
+  }
+  
+  .chart-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-header {
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .chart-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary);
+    font-size: 1.1rem;
+  }
+
+  .chart-controls label {
+    font-size: 0.85rem;
+  }
+  
+  .chart-controls select {
+    margin-left: 0.25rem;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .chart-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+  }
+  
+  .chart-wrapper canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 500px;
+  }
+  
+  @media (max-width: 768px) {
+    .chart-card {
+      padding: 1rem;
+    }
+    
+    .chart-container {
+      padding: 0 1rem 1rem;
+    }
+    
+    .chart-header {
+      flex-direction: column;
+    }
+  }
+</style>
+    
+    <style>
+      .chart-container {
+        width: 100%;
+        padding: 0 1.5rem 1.5rem;
+        box-sizing: border-box;
+      }
+      
+      .chart-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .chart-card h4 {
+        margin: 0 0 1rem 0;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+      
+      .chart-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: 300px;
+      }
+      
+      .chart-wrapper canvas {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 500px;
+      }
+      
+      @media (max-width: 768px) {
+        .chart-card {
+          padding: 1rem;
+        }
+        
+        .chart-container {
+          padding: 0 1rem 1rem;
+        }
+      }
+    </style>
+
+        <!-- EXPORTAR EMPRESA -->
+    <section id="tab-exportar" class="tab-content">
+      <div class="card">
+        <h3>Exportar datos completos</h3>
+        <p class="muted">
+          Exporta toda la información financiera de la empresa en diferentes formatos.
+          Los datos se exportarán en este orden: DATOS, ANÁLISIS, RAZONES, EOAF, EFE, DuPont, GRÁFICOS, PROFORMA.
+        </p>
+
+        <div class="export-options">
+          <div class="export-option">
+            <h4>Exportar como JSON</h4>
+            <p>Formato técnico con todos los datos para importar en otros sistemas.</p>
+            <button id="exportJsonBtn" class="btn primary">
+              <i class="fas fa-file-code"></i> Descargar JSON
+            </button>
+          </div>
+
+          <div class="export-option">
+            <h4>Exportar a Excel</h4>
+            <p>Archivo Excel con hojas para cada sección de análisis.</p>
+            <button id="exportExcelBtn" class="btn">
+              <i class="fas fa-file-excel"></i> Exportar a Excel
+            </button>
+          </div>
+
+          <div class="export-option">
+            <h4>Generar PDF</h4>
+            <p>Documento PDF con formato para impresión.</p>
+            <button id="exportPdfBtn" class="btn">
+              <i class="fas fa-file-pdf"></i> Exportar a PDF
+            </button>
+          </div>
+          
+          <div class="export-option">
+            <h4>Vista previa HTML</h4>
+            <p>Visualiza el informe completo en el navegador.</p>
+            <button id="exportHtmlBtn" class="btn">
+              <i class="fas fa-file-code"></i> Exportar a HTML
+            </button>
+          </div>
+        </div>
+        
+        <div id="exportStatus" class="export-status">
+          <!-- Mensajes de estado se mostrarán aquí -->
+        </div>
+        
+        <style>
+          .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+          }
+          
+          .export-option {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+          }
+          
+          .export-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          }
+          
+          .export-option h4 {
+            margin: 0 0 10px 0;
+            color: #4cc9f0;
+            font-size: 1.1em;
+          }
+          
+          .export-option p {
+            margin: 0 0 15px 0;
+            color: #aaa;
+            font-size: 0.9em;
+            min-height: 40px;
+          }
+          
+          .export-option .btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+          }
+          
+          .export-status {
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 6px;
+            background: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid #4cc9f0;
+            color: #fff;
+            display: none;
+            animation: fadeIn 0.3s ease;
+          }
+          
+          .export-status.visible {
+            display: block;
+          }
+          
+          .export-status.error {
+            background: rgba(244, 67, 54, 0.1);
+            border-left-color: #f44336;
+          }
+          
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          @media (max-width: 768px) {
+            .export-options {
+              grid-template-columns: 1fr;
+            }
+          }
+        </style>
+        
+        <script>
+          // Configurar manejadores de eventos para los botones de exportación
+          document.addEventListener('DOMContentLoaded', function() {
+            // Exportar a JSON
+            document.getElementById('exportJsonBtn')?.addEventListener('click', function() {
+              try {
+                showExportStatus('Preparando datos para exportar a JSON...');
+                finbotExportEmpresaJson();
+                showExportStatus('Datos exportados a JSON correctamente');
+              } catch (e) {
+                showExportStatus('Error al exportar a JSON: ' + e.message, true);
+                console.error('Error en exportación JSON:', e);
+              }
+            });
+            
+            // Exportar a Excel
+            document.getElementById('exportExcelBtn')?.addEventListener('click', function() {
+              try {
+                showExportStatus('Generando archivo Excel...');
+                finbotExportEmpresaExcel();
+                showExportStatus('Datos exportados a Excel correctamente');
+              } catch (e) {
+                showExportStatus('Error al exportar a Excel: ' + e.message, true);
+                console.error('Error en exportación Excel:', e);
+              }
+            });
+            
+            // Generar PDF
+            document.getElementById('exportPdfBtn')?.addEventListener('click', function() {
+              try {
+                showExportStatus('Generando reporte PDF...');
+                exportReporteCompletoPdf();
+              } catch (e) {
+                showExportStatus('Error al generar PDF: ' + e.message, true);
+                console.error('Error en generación PDF:', e);
+              }
+            });
+            
+            // Vista previa HTML
+            document.getElementById('exportHtmlBtn')?.addEventListener('click', function() {
+              try {
+                showExportStatus('Generando vista previa HTML...');
+                const htmlContent = finbotBuildFullReportHtml();
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(htmlContent);
+                newWindow.document.close();
+                showExportStatus('Vista previa del reporte abierta en una nueva pestaña');
+              } catch (e) {
+                showExportStatus('Error al generar vista previa: ' + e.message, true);
+                console.error('Error en vista previa HTML:', e);
+              }
+            });
+            
+            // Función para mostrar mensajes de estado
+            function showExportStatus(message, isError = false) {
+              const statusEl = document.getElementById('exportStatus');
+              if (!statusEl) return;
+              
+              statusEl.textContent = message;
+              statusEl.className = 'export-status visible' + (isError ? ' error' : '');
+              
+              // Ocultar el mensaje después de 5 segundos si no es un error
+              if (!isError) {
+                setTimeout(() => {
+                  if (statusEl.textContent === message) {
+                    statusEl.className = 'export-status';
+                  }
+                }, 5000);
+              }
+            }
+          });
+        </script>
+      </div>
+    </section>
+
+
+
+
+<!-- ALMACENAMIENTO -->
+    <section id="tab-almacen" class="tab-content">
+      <div class="card">
+        <h3>Almacenamiento local</h3>
+        <div class="grid">
+          <label>Nombre del proyecto
+            <input id="projNameInput" type="text" placeholder="Ej. Finbot ACME" />
+          </label>
+        </div>
+        <div class="row gap wrap">
+          <button id="guardarProyectoBtn" class="btn primary">Guardar/Actualizar</button>
+          <button id="refrescarListaBtn" class="btn">Refrescar lista</button>
+        </div>
+        <div class="scroll">
+          <table id="tablaProyectos">
+            <thead>
+              <tr>
+                <th>Proyecto</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="listaProyectos"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <!-- PRO FORMA -->
+    <section id="tab-proforma" class="tab-content">
+      <div class="grid">
+        <div class="card">
+          <h3>Estados Financieros Proforma</h3>
+          <div class="grid">
+            <label>Periodo base para proyección
+              <select id="proformaBaseSelect">
+                <!-- Se llenará dinámicamente con los años disponibles -->
+              </select>
+            </label>
+            <!-- Cambiar esta parte en la sección de Pro Forma -->
+            <label>Años a proyectar
+              <input id="proformaAniosProyeccion" type="number" min="1" max="10" value="1" />
+            </label>  
+            <label>% Crecimiento de ventas
+              <input id="proformaCrecimientoVentas" type="number" step="0.01" value="5.00" />
+            </label>
+            <label>% Impuestos
+              <input id="proformaImpuestos" type="number" step="0.01" value="30.00" />
+            </label>
+            <label>% Utilidades retenidas
+              <input id="proformaUtilidadesRetenidas" type="number" step="0.01" value="50.00" />
+            </label>
+            <div class="row">
+              <button id="generarProformaBtn" class="btn primary">Generar Proyección</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Configuración de cuentas</h3>
+          <div id="proformaCuentasConfig">
+            <!-- Se llenará dinámicamente con las cuentas del periodo base -->
+            <p>Seleccione un periodo base para configurar las cuentas.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1rem;">
+        <h3>Resultados Proforma</h3>
+        <div class="proforma-tabs">  
+        <button class="proforma-tab-btn active" data-proforma-tab="estado-resultados">Estado de Resultados</button>
+          <button class="proforma-tab-btn" data-proforma-tab="balance-general">Balance General</button>
+          <button class="proforma-tab-btn" data-proforma-tab="flujo-efectivo">Flujo de Efectivo</button>
+        </div>
+
+        <div id="proformaEstadoResultados" class="proforma-tab-content active">
+          <table class="data-table">
+            <thead><tr><th>Cuenta</th><th>Monto Proyectado</th><th>% Ventas</th><th>Notas</th></tr></thead>
+            <tbody id="proformaERBody">
+              <!-- Se llenará dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div id="proformaBalanceGeneral" class="proforma-tab-content">
+          <table class="data-table">
+            <thead><tr><th>Cuenta</th><th>Monto Proyectado</th><th>% Ventas</th><th>Notas</th></tr></thead>
+            <tbody id="proformaBGBody">
+              <!-- Se llenará dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div id="proformaFlujoEfectivo" class="proforma-tab-content">
+          <table class="data-table">
+            <thead><tr><th>Concepto</th><th>Monto</th></tr></thead>
+            <tbody id="proformaFEBody">
+              <!-- Se llenará dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="row" style="margin-top: 1rem;">
+          <button id="guardarProyeccionBtn" class="btn primary">Guardar Proyección</button>
+          <button id="exportarProformaBtn" class="btn">Exportar a Excel</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    .proforma-tab-content { display: none; }
+    .proforma-tab-content.active { display: block; }
+    .proyeccion-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem; }
+    .proyeccion-row select { flex: 1; }
+    .proyeccion-row input { width: 100px; }
+  </style>
+
+  <footer class="muted">
+    2025 FINBOT | Finanzas I
+    UNIVERSIDAD NACIONAL DE INGENIERIA - RUSB
+     
+  </footer>
+
+ 
+  
+<script src="app.js"></script>
+<script src="proforma.js"></script>
+  
+  
+  <script>
+    (function(){
+      function mount(){
+        if(document.getElementById('cbWidget')) return;
+        const style=document.createElement('style');
+        style.textContent=`
+        #cbWidget{position:fixed;right:18px;bottom:18px;z-index:9999}
+        #cbBtn{appearance:none;border:0;background:linear-gradient(180deg,#176a4a,#11533a);color:#ecfff7;border-radius:999px;padding:12px 16px;font-weight:800;box-shadow:0 10px 22px rgba(0,0,0,.35);cursor:pointer}
+        #cbPanel{position:fixed;right:18px;bottom:76px;width:min(380px,92vw);max-height:70vh;background:#0b0f14;border:1px solid #1e2835;border-radius:14px;display:none;grid-template-rows:auto 1fr auto;box-shadow:0 10px 32px rgba(0,0,0,.45)}
+        #cbHdr{padding:10px 12px;border-bottom:1px solid #1e2835;font-weight:800}
+        #cbList{padding:12px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+        .cb-msg{white-space:pre-wrap;line-height:1.3;border-radius:10px;padding:10px 12px;max-width:92%}
+        .cb-u{align-self:flex-end;background:#16324c;border:1px solid #22486c}
+        .cb-a{align-self:flex-start;background:#12201a;border:1px solid #1e3a2e}
+        #cbInp{display:flex;gap:8px;padding:10px;border-top:1px solid #1e2835}
+        #cbText{flex:1;background:#0e141c;border:1px solid #1e2835;border-radius:10px;padding:10px;color:#e6eef8}
+        #cbSend{appearance:none;border:1px solid #1e2835;background:#121922;color:#e6eef8;border-radius:10px;padding:10px 12px;cursor:pointer}
+        `;
+        document.head.appendChild(style);
+        const wrap=document.createElement('div');wrap.id='cbWidget';
+        wrap.innerHTML=`<button id="cbBtn" aria-expanded="false">Chat</button>
+        <div id="cbPanel" role="dialog" aria-label="Asistente financiero">
+          <div id="cbHdr">Asistente</div>
+          <div id="cbList"></div>
+          <div id="cbInp"><input id="cbText" placeholder="Escribe tu pregunta..."/><button id="cbSend">Enviar</button></div>
+        </div>`;
+        document.body.appendChild(wrap);
+        const panel=document.getElementById('cbPanel');
+        const btn=document.getElementById('cbBtn');
+        const list=document.getElementById('cbList');
+        const text=document.getElementById('cbText');
+        const send=document.getElementById('cbSend');
+        const push=(who,txt)=>{const d=document.createElement('div');d.className='cb-msg '+(who==='u'?'cb-u':'cb-a');d.textContent=txt;list.appendChild(d);list.scrollTop=list.scrollHeight;};
+        const stream=(txt)=>new Promise(res=>{let i=0;const d=document.createElement('div');d.className='cb-msg cb-a';list.appendChild(d);const t=setInterval(()=>{i=Math.min(i+Math.max(5,Math.floor(txt.length/60)),txt.length);d.textContent=txt.slice(0,i);list.scrollTop=list.scrollHeight;if(i>=txt.length){clearInterval(t);res();}},20);});
+        const has=(fn)=>typeof window[fn]==='function';
+        const ensureResumen=()=>{return typeof window.state==='object' && state && state.periodoActivo && has('prepararResumenIA') ? (prepararResumenIA(state.periodoActivo),true) : false};
+        const topN=(arr,n)=>arr.slice(0,n).join('\n');
+        const intent=(q)=>{
+          const s=q.toLowerCase().trim();
+          if(/^(ayuda|help|comandos)(\b|$)/.test(s)) return 'Comandos: preparar, periodo AAAA, interpretación, resumen global, razones, cuentas, recomendaciones, alertas.';
+          if(/prepara|preparar|resumen\s*ia/.test(s)){ if(!ensureResumen()) return 'Abra la pestaña IA y presione “Preparar resumen”.'; return `Resumen del periodo ${state.periodoActivo} preparado.`; }
+          const m=s.match(/^periodo\s+(\d{4})/); if(m){ const y=m[1]; if(typeof state==='object' && state.periodos && state.periodos[y]){ if(has('setPeriodoActivo')) setPeriodoActivo(y); if(has('prepararResumenIA')) prepararResumenIA(y); return `Periodo activo cambiado a ${y}.`; } return `No existe el periodo ${y}.`; }
+          if(/interpret|anali|diagnost/.test(s)){ if(!has('interpretarHeuristico')) return 'Abra la pestaña IA y use “Generar interpretación (local)”.'; if(!ensureResumen()) return 'Use “preparar” primero.'; return interpretarHeuristico(); }
+          if(/\bglobal\b/.test(s)){ if(!has('interpretarGlobal')) return 'Función no disponible en esta vista.'; return interpretarGlobal(); }
+          if(/razon|kpi|formula/.test(s)){ if(!has('razonesListado')) return 'KPIs no disponibles aquí.'; const y=state?.periodoActivo; if(!y) return 'No hay periodo activo.'; const items=razonesListado(y).map(it=>`- ${it.nombre}: ${it.valor}`); return ['KPIs del periodo:',...items].join('\n'); }
+          if(/cuenta|detalle|balance|estado/.test(s)){ if(!has('detalleCuentasAV')) return 'Detalle no disponible desde aquí.'; const y=state?.periodoActivo; if(!y) return 'No hay periodo activo.'; const d=detalleCuentasAV(y); return topN(['Detalle (parcial):',...d],60); }
+          if(/recom|accion/.test(s)){ if(!has('kpiAlertasYAcciones')) return 'Recomendaciones no disponibles.'; if(!ensureResumen()) return 'Use “preparar”.'; const {acciones}=kpiAlertasYAcciones(state._iaResumen.year); return acciones.length?['Acciones prioritarias:',...acciones].join('\n'):'Sin acciones relevantes.'; }
+          if(/alerta|riesgo/.test(s)){ if(!has('kpiAlertasYAcciones')) return 'Alertas no disponibles.'; if(!ensureResumen()) return 'Use “preparar”.'; const {alertas}=kpiAlertasYAcciones(state._iaResumen.year); return alertas.length?['Alertas:',...alertas].join('\n'):'Sin alertas.'; }
+          return 'No entendí. Escribe "ayuda" para ver comandos.';
+        };
+        const onSend=async()=>{const q=(text.value||'').trim();if(!q) return;push('u',q);text.value='';await stream(intent(q));};
+        btn.addEventListener('click',()=>{const v=panel.style.display==='grid';panel.style.display=v?'none':'grid';btn.setAttribute('aria-expanded',String(!v));if(!v&&list.children.length===0){push('a','Hola, soy tu asistente local. Escribe "ayuda" para ver comandos.');}});
+        send.addEventListener('click',onSend);
+        text.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();onSend();}});
+      }
+      window.addEventListener('DOMContentLoaded',mount);
+    })();
+  </script>
+<script src="./graficos.js"></script>
+<script src="./app.js"></script>
+<script src="./proforma.js"></script>
+<script src="./export.js"></script>
+
+</body>
+</html>
+
+

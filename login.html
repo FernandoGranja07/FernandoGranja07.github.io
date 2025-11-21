@@ -1,0 +1,542 @@
+
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>FINBOT Web — Acceso</title>
+<meta name="theme-color" content="#0A0F16" />
+<meta name="color-scheme" content="dark light" />
+<meta name="description" content="Acceso premium para estudiantes login/registro con roles y mini dashboard.">
+
+
+
+<style>
+/* ================= TOKENS ================= */
+:root{
+  --bg:#070c12; --bg2:#0b111a; --panel:#0e1521; --panel2:#0b121c;
+  --ink:#eaf2ff; --muted:#9fb1c7; --line:#1c2a3b;
+  --acc:#2EB67D; --acc2:#1d8c5a; --blue:#4CC9F0;
+  --r:18px; --shadow:0 30px 140px rgba(0,0,0,.45);
+}
+@media (prefers-color-scheme: light){
+  :root{ --bg:#edf3ff; --bg2:#f8fbff; --panel:#ffffff; --panel2:#ffffff; --ink:#0f1622; --muted:#5b6f86; --line:#dfe8f1; --shadow:0 26px 110px rgba(18,36,60,.12)}
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink);
+  font:500 16px/1.6 ui-sans-serif,system-ui,"Segoe UI",Inter,Roboto,Arial;
+  background: radial-gradient(120% 100% at 80% 0%, rgba(76,201,240,.14), transparent 55%),
+              radial-gradient(120% 100% at 0% 100%, rgba(46,182,125,.14), transparent 55%),
+              linear-gradient(180deg,var(--bg),var(--bg2));
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+
+/* ================ AURORA / NOISE ================= */
+.aurora{
+  position:fixed; inset:-15% -10%; z-index:-3; filter: blur(40px) saturate(140%);
+  background:
+    radial-gradient(40% 35% at 18% 24%, rgba(46,182,125,.28), transparent 60%),
+    radial-gradient(35% 30% at 82% 30%, rgba(76,201,240,.30), transparent 60%);
+  animation:flow 22s ease-in-out infinite alternate;
+  opacity:.75;
+}
+@keyframes flow{0%{transform:translateY(-2%) rotate(0deg) scale(1)}100%{transform:translateY(2%) rotate(3deg) scale(1.05)}}
+.noise{
+  position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.03; mix-blend-mode:overlay;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+  background-size:280px 280px;
+}
+
+/* ================ LAYOUT ================= */
+.shell{min-height:100dvh; display:grid; grid-template-columns:1.05fr .95fr}
+@media (max-width:1100px){ .shell{grid-template-columns:1fr} }
+
+/* LEFT */
+.left{
+  position:relative; overflow:hidden;
+  padding:42px clamp(18px,5vw,64px); border-right:1px solid var(--line);
+  display:flex; flex-direction:column; gap:22px;
+}
+.hero{display:flex; align-items:center; gap:16px}
+.brand{
+  width:66px; height:66px; border-radius:18px; display:grid; place-items:center;
+  background:#0c1624;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 60px rgba(76,201,240,.25), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.heading h1{
+  margin:0; font-size:clamp(2.2rem,5.4vw,3.6rem); line-height:1.04; letter-spacing:-.02em;
+  background:linear-gradient(180deg,#fff,#dff3ff 55%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.heading .sub{color:var(--muted)}
+.kicker{margin-top:6px; display:inline-flex; align-items:center; gap:8px; font-weight:700; padding:6px 12px; border:1px solid var(--line); border-radius:999px; color:var(--muted); background:rgba(255,255,255,.03)}
+
+/* features */
+.features{display:grid; grid-template-columns:1.15fr 1fr; gap:14px; margin-top:14px}
+@media (max-width:900px){ .features{grid-template-columns:1fr} }
+.card{
+  border:1px solid var(--line); border-radius:16px;
+  background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 96%, #000 4%), color-mix(in oklab, var(--panel2) 90%, #000 10%));
+  box-shadow:var(--shadow); padding:16px; position:relative; overflow:hidden;
+}
+.card .head{display:flex; align-items:center; justify-content:space-between}
+.badges{display:flex; gap:8px; flex-wrap:wrap}
+.badge{border:1px solid var(--line); border-radius:10px; padding:4px 8px; color:var(--muted); font-size:.88rem}
+.tape{margin-top:12px; overflow:hidden; border:1px dashed var(--line); border-radius:12px; background:rgba(255,255,255,.02)}
+.marquee{white-space:nowrap; display:flex; gap:28px; padding:8px 12px; animation:mar 24s linear infinite}
+@keyframes mar{to{transform:translateX(-50%)}}
+.tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px}
+.tile{border:1px solid var(--line); border-radius:14px; padding:12px; background:color-mix(in oklab, var(--panel2) 92%, #000 8%)}
+.tile small{color:var(--muted); display:block; margin-bottom:6px}
+canvas.spark, canvas.gauge{width:100%; height:120px; background:#0d1624; border:1px solid var(--line); border-radius:10px}
+
+/* wireframe globe */
+#globe{position:absolute; right:-110px; top:120px; width:min(520px,45vw); height:min(520px,45vw); opacity:.62; filter: drop-shadow(0 10px 40px rgba(76,201,240,.25))}
+
+/* RIGHT (AUTH) */
+.right{padding:42px clamp(18px,5vw,48px); display:flex; align-items:center; justify-content:center}
+.auth{
+  width:min(600px,100%); border:1px solid var(--line); border-radius:18px;
+  background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 96%, #000 4%), color-mix(in oklab, var(--panel2) 90%, #000 10%));
+  box-shadow:var(--shadow); padding:18px; position:relative; overflow:hidden;
+}
+.auth::after{
+  content:""; position:absolute; inset:-2px; border-radius:inherit; padding:1px;
+  background:linear-gradient(120deg, rgba(76,201,240,.35), rgba(46,182,125,.35));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity:.35; pointer-events:none;
+}
+.tabs{display:flex; gap:8px; border-bottom:1px solid var(--line)}
+.tab{flex:1; text-align:center; padding:12px; cursor:pointer; color:var(--muted); font-weight:900; border-radius:12px 12px 0 0; transition:background .2s}
+.tab.active{color:var(--ink); background:rgba(255,255,255,.05)}
+.form{display:grid; gap:14px; padding:16px 8px}
+.row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:560px){ .row{grid-template-columns:1fr} }
+.field{display:grid; gap:6px}
+label{color:color-mix(in oklab, var(--ink) 92%, #000 8%); font-weight:800}
+input, select{
+  padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:rgba(14,20,32,.74);
+  color:var(--ink); transition:border-color .18s, box-shadow .18s;
+}
+input:focus, select:focus{outline:none; border-color:var(--acc); box-shadow:0 0 0 2px color-mix(in oklab,var(--acc) 25%, transparent)}
+.pw{position:relative}
+.eye{position:absolute; right:10px; top:50%; transform:translateY(-50%); border:0; background:transparent; color:var(--muted); cursor:pointer}
+
+/* roles */
+.roles{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.role{
+  border:2px solid var(--line); border-radius:14px; padding:16px; text-align:center; cursor:pointer;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  transform-style:preserve-3d; transition:transform .12s, border-color .18s, background .18s;
+}
+.role:hover{transform:translateY(-2px) rotateX(2deg)}
+.role.active{border-color:var(--acc); background:rgba(46,182,125,.08)}
+.role b{display:block; margin-top:6px}
+.role small{color:var(--muted)}
+
+/* meter + buttons */
+.meter{height:10px; border:1px solid var(--line); border-radius:999px; overflow:hidden; background:rgba(255,255,255,.05)}
+.meter>div{height:100%; width:0%; background:linear-gradient(90deg,#f43f5e,#f59e0b 50%,#22c55e); transition:width .25s}
+.actions{display:flex; gap:10px; flex-wrap:wrap}
+.btn{flex:1; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.03);
+  color:var(--ink); font-weight:900; cursor:pointer; transition:transform .08s ease, box-shadow .18s, filter .18s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{border:0; background:linear-gradient(180deg,var(--acc),var(--acc2)); color:#07160f; box-shadow:0 16px 46px rgba(46,182,125,.32)}
+.btn.google{background:#fff; color:#111}
+.btn.mag{position:relative; overflow:hidden}
+.btn.mag:hover{filter:saturate(1.1)}
+.btn.mag::after{
+  content:""; position:absolute; inset:0; background:radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(255,255,255,.08), transparent 60%);
+  transition:opacity .2s; opacity:0;
+}
+.btn.mag:hover::after{opacity:1}
+
+.sep{display:flex; align-items:center; gap:10px; color:var(--muted)}
+.sep::before,.sep::after{content:""; flex:1; height:1px; background:var(--line)}
+.help{color:var(--muted)}
+.alert{display:none; padding:12px; border-radius:12px; font-weight:800; text-align:center}
+.alert.ok{background:rgba(46,182,125,.12); border:1px solid color-mix(in oklab,var(--acc) 70%,#000 30%); color:#d6ffe8}
+.alert.err{background:rgba(244,63,94,.12); border:1px solid color-mix(in oklab,crimson 70%,#000 30%); color:#ffd3d9}
+.hide{display:none}
+
+/* DASHBOARD */
+#app{display:none}
+.app-head{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:6px 2px}
+.avatar{width:46px; height:46px; border-radius:14px; display:grid; place-items:center; font-weight:900; color:#06160e}
+.kpis{margin:12px 0; display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+@media (max-width:820px){ .kpis{grid-template-columns:1fr 1fr} }
+.kpi{border:1px solid var(--line); border-radius:14px; padding:14px; background:color-mix(in oklab, var(--panel2) 92%, #000 8%)}
+.kpi .v{font-size:1.28rem; font-weight:900}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px}
+@media (max-width:980px){ .grid3{grid-template-columns:1fr} }
+.panelx{border:1px solid var(--line); border-radius:14px; padding:16px; background:color-mix(in oklab, var(--panel2) 92%, #000 8%)}
+canvas.main{width:100%; height:248px; background:#0d1624; border:1px solid var(--line); border-radius:10px}
+
+/* Focus visible para accesibilidad */
+:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:8px}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<div class="aurora"></div>
+<div class="noise"></div>
+
+<div class="shell">
+  <!-- ============ LEFT ============ -->
+  <section class="left">
+    <div class="hero">
+      <div class="brand" aria-hidden="true">
+        <!-- LOGO: “F” + barras en círculo -->
+        <svg width="44" height="44" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#BFEBFF"/><stop offset="1" stop-color="#4CC9F0"/></linearGradient></defs>
+          <circle cx="32" cy="32" r="28" stroke="url(#g)" stroke-width="3" opacity=".95"/>
+          <path d="M19 22h18a2 2 0 0 1 0 4H19v16a2 2 0 1 1-4 0V24a4 4 0 0 1 4-4Z" fill="url(#g)"/>
+          <rect x="34" y="30" width="5" height="16" rx="1.5" fill="url(#g)"/>
+          <rect x="41" y="26" width="5" height="20" rx="1.5" fill="url(#g)"/>
+          <rect x="48" y="22" width="5" height="24" rx="1.5" fill="url(#g)"/>
+        </svg>
+      </div>
+      <div class="heading">
+        <h1>FINBOT Web</h1>
+        <div class="sub">Hecho para <b>Estudiantes</b> — moderno y confiable.</div>
+        <div class="kicker">Tecnología financiera • Experiencia premium • Detalle humano</div>
+      </div>
+    </div>
+
+    <div class="features" aria-label="Casos y confianza">
+      <div class="card">
+        <div class="head">
+          <div style="font-weight:800">Casos de uso reales</div>
+          <div class="badges"><span class="badge">KPIs</span><span class="badge">Series</span><span class="badge">Inventario</span></div>
+        </div>
+        <div class="tape">
+          <div class="marquee" aria-hidden="true">
+            <span>• Estudiantes UNI — Proyectos de Finanzas</span>
+            <span>• Estudiantes UNI — Proyectos de Finanzas</span>
+          </div>
+        </div>
+        <div class="tiles">
+          <div class="tile"><small>Serie</small><canvas class="spark" id="sp1" height="120"></canvas></div>
+          <div class="tile"><small>Gauge</small><canvas class="gauge" id="sp2" height="120"></canvas></div>
+          <div class="tile"><small>Tendencia</small><canvas class="spark" id="sp3" height="120"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head"><div style="font-weight:800">Testimonios</div><div class="badges"><span class="badge">Confianza</span><span class="badge">Rigor</span></div></div>
+        <p class="help" style="margin:10px 0 0">“UI con carácter propio, autenticación sin fricción y enfoque profesional.”</p>
+        <p class="help" style="margin:6px 0 0">“Se nota el cuidado de detalles: limpio, claro y rápido.”</p>
+      </div>
+    </div>
+
+    <canvas id="globe" aria-hidden="true"></canvas>
+  </section>
+
+  <!-- ============ RIGHT / AUTH ============ -->
+  <section class="right">
+    <div class="auth" id="auth" aria-label="Autenticación">
+      <div class="tabs" role="tablist">
+        <div class="tab active" role="tab" aria-selected="true" data-tab="login">Iniciar sesión</div>
+        <div class="tab" role="tab" aria-selected="false" data-tab="register">Registrarse</div>
+      </div>
+
+      <div class="alert ok" id="ok"></div>
+      <div class="alert err" id="err"></div>
+
+      <!-- LOGIN -->
+      <form class="form" id="formLogin" autocomplete="on">
+        <div class="field">
+          <label for="logMail">Correo electrónico</label>
+          <input id="logMail" type="email" placeholder="tu@ejemplo.com" autocomplete="email" required>
+        </div>
+        <div class="field pw">
+          <label for="logPwd">Contraseña</label>
+          <input id="logPwd" type="password" placeholder="••••••••" autocomplete="current-password" required>
+          <button class="eye" type="button" data-target="logPwd" aria-label="Mostrar/ocultar">👁</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <label class="help"><input id="remember" type="checkbox" style="margin-right:8px">Recordarme</label>
+          <a href="#" id="forgot" class="help">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary mag" type="submit" id="btnLogin">Entrar</button>
+        </div>
+
+        <div class="sep"><span>o continuar con</span></div>
+        <div id="googleLoginWrap"></div>
+
+        <small class="help">¿No tienes cuenta? <a href="#" id="toReg" style="color:var(--blue)">Crear Una Cuenta</a></small>
+      </form>
+
+      <!-- REGISTRO -->
+      <form class="form hide" id="formReg" autocomplete="on">
+        <div class="row">
+          <div class="field"><label for="regName">Nombre completo</label><input id="regName" placeholder="Tu nombre y apellido" autocomplete="name" required></div>
+          <div class="field"><label for="regMail">Correo electrónico</label><input id="regMail" type="email" placeholder="tu@ejemplo.com" autocomplete="email" required></div>
+        </div>
+        <div class="row">
+          <div class="field pw"><label for="regPwd">Contraseña</label><input id="regPwd" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required><button class="eye" type="button" data-target="regPwd" aria-label="Mostrar/ocultar">👁</button></div>
+          <div class="field pw"><label for="regPwd2">Confirmación</label><input id="regPwd2" type="password" placeholder="Repetí tu contraseña" autocomplete="new-password" required><button class="eye" type="button" data-target="regPwd2" aria-label="Mostrar/ocultar">👁</button></div>
+        </div>
+
+        <div class="meter" aria-hidden="true"><div id="meter"></div></div>
+        <small class="help">Tip: 12+ caracteres, mayúsc./minúsc., número y símbolo.</small>
+
+        <div class="field">
+          <label>Seleccioná tu perfil</label>
+          <div class="roles">
+            <div class="role" data-role="student">🎓 <b>Estudiante</b><small>Estudios y guías</small></div>
+            
+        </div>
+
+        <!-- Campos por rol -->
+        <div id="roleStudent" class="hide">
+          <div class="row">
+            <div class="field"><label for="uni">Universidad</label><input id="uni" placeholder="UNI (Nicaragua)"></div>
+            <div class="field"><label for="carrera">Carrera</label><input id="carrera" placeholder="Ing. de Sistemas"></div>
+          </div>
+        </div>
+        <div id="roleBusiness" class="hide">
+          <div class="row">
+            <div class="field"><label for="empresa">Empresa</label><input id="empresa" placeholder="Nombre comercial"></div>
+            <div class="field"><label for="rubro">Rubro</label><input id="rubro" placeholder="Retail, Cafetería…"></div>
+          </div>
+        </div>
+
+        <label class="help"><input id="terms" type="checkbox" style="margin-right:8px">Acepto términos y privacidad</label>
+
+        <div class="actions">
+          <button class="btn primary mag" type="submit">Crear cuenta</button>
+        </div>
+
+        <!-- OTP/Magic (demo opcional; oculto) -->
+        <button id="sendOtp" class="btn hide" type="button">Enviar OTP (demo)</button>
+        <div id="otpWrap" class="hide">
+          <div class="row">
+            <div class="field"><label for="otp">Código 6 dígitos</label><input id="otp" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••"></div>
+            <div class="field"><button class="btn" id="verifyOtp" type="button">Verificar OTP</button></div>
+          </div>
+          <small class="help">Producción: envío por correo y verificación en servidor.</small>
+        </div>
+
+        <div class="sep"><span>o</span></div>
+        <div id="googleRegWrap"></div>
+
+        <small class="help">¿Ya tenés cuenta? <a href="#" id="toLog" style="color:var(--blue)">Volver a inicio</a></small>
+      </form>
+
+      <!-- DASHBOARD -->
+      <div id="app" class="hide" aria-live="polite">
+        <div class="app-head">
+          <div style="display:flex; align-items:center; gap:12px">
+            <div id="avatar" class="avatar" aria-hidden="true">F</div>
+            <div>
+              <div style="font-weight:900">Bienvenido, <span id="dName">—</span></div>
+              <small class="help"><span id="dRole">—</span> • <span id="dMail">—</span></small>
+            </div>
+          </div>
+          <button class="btn" id="logout">Cerrar sesión</button>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="help">Margen Bruto</div><div class="v" id="kMB">—</div></div>
+          <div class="kpi"><div class="help">Razón Circulante</div><div class="v" id="kRC">—</div></div>
+          <div class="kpi"><div class="help">Endeudamiento</div><div class="v" id="kET">—</div></div>
+        </div>
+
+        <div class="grid3">
+          <div class="panelx"><div style="font-weight:800; margin-bottom:8px">Pulso</div><canvas class="main" id="mainChart" height="248"></canvas></div>
+          <div class="panelx">
+            <div style="font-weight:800; margin-bottom:8px">Mini cálculo</div>
+            <div class="row">
+              <div class="field"><label for="ventas">Ventas netas</label><input id="ventas" type="number" placeholder="900000"></div>
+              <div class="field"><label for="costo">Costo de ventas</label><input id="costo" type="number" placeholder="540000"></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="gastos">Gastos operativos</label><input id="gastos" type="number" placeholder="230000"></div>
+              <div class="field"><label for="pc">Pasivo circulante</label><input id="pc" type="number" placeholder="90000"></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="ac">Activo circulante</label><input id="ac" type="number" placeholder="300000"></div>
+              <div class="field"><button class="btn primary mag" id="calc" type="button">Calcular</button></div>
+            </div>
+          </div>
+          <div class="panelx">
+            <div style="font-weight:800; margin-bottom:8px">Atajos</div>
+            <ul style="margin:0; padding-left:18px" class="help">
+              <li>Recordar sesión</li>
+              <li>Magic Link / OTP (demo)</li>
+              <li>Google Identity (producción)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<script>
+/* ===== Utils ===== */
+const $=(s,e=document)=>e.querySelector(s); const $$=(s,e=document)=>[...e.querySelectorAll(s)];
+const ok=$('#ok'), err=$('#err'); const showOk=m=>{err.style.display='none'; ok.textContent=m; ok.style.display='block'; setTimeout(()=>ok.style.display='none',2800);} ; const showErr=m=>{ok.style.display='none'; err.textContent=m; err.style.display='block';}
+
+/* ===== Magnetic hover for buttons ===== */
+$$('.mag').forEach(btn=>{
+  btn.addEventListener('pointermove', e=>{
+    const r=btn.getBoundingClientRect(); btn.style.setProperty('--mx', (e.clientX-r.left)+'px'); btn.style.setProperty('--my', (e.clientY-r.top)+'px');
+  });
+});
+
+/* ===== Mini charts ===== */
+function spark(c,data){ const x=c.getContext('2d'), dpr=Math.max(1,devicePixelRatio||1); const W=(c.clientWidth||c.width)*dpr, H=c.height*dpr; c.width=W; c.height=H;
+  const pad=10*dpr, mn=Math.min(...data), mx=Math.max(...data); x.fillStyle='#0d1624'; x.fillRect(0,0,W,H); x.strokeStyle='rgba(255,255,255,.12)'; x.beginPath(); x.moveTo(pad, H-pad); x.lineTo(W-pad, H-pad); x.stroke();
+  x.strokeStyle='#2EB67D'; x.lineWidth=2*dpr; x.beginPath(); data.forEach((v,i)=>{ const X=pad+i*(W-2*pad)/(data.length-1); const Y=H-pad-((v-mn)/(mx-mn||1))*(H-2*pad); i?x.lineTo(X,Y):x.moveTo(X,Y); }); x.stroke();}
+function gauge(c,val){ const x=c.getContext('2d'), dpr=Math.max(1,devicePixelRatio||1); const W=(c.clientWidth||c.width)*dpr, H=c.height*dpr; c.width=W; c.height=H;
+  const cx=W/2, cy=H*.86, r=Math.min(W,H)*.42; x.fillStyle='#0d1624'; x.fillRect(0,0,W,H); x.lineWidth=12*dpr; x.strokeStyle='rgba(255,255,255,.12)'; x.beginPath(); x.arc(cx,cy,r,Math.PI,0); x.stroke();
+  const t=Math.max(0,Math.min(2,val))/2, ang=Math.PI + Math.PI*t; const g=x.createLinearGradient(cx-r,cy,cx+r,cy); g.addColorStop(0,'#2EB67D'); g.addColorStop(1,'#4cc9f0'); x.strokeStyle=g; x.beginPath(); x.arc(cx,cy,r,Math.PI,ang); x.stroke();}
+spark($('#sp1'), [10,14,18,13,21,17,25,22,28,26,31,30]); gauge($('#sp2'), 1.7); spark($('#sp3'), [8,12,11,15,19,18,24,22,27,29,28,33]);
+
+/* ===== Tabs ===== */
+const tLogin=$('.tab[data-tab="login"]'), tReg=$('.tab[data-tab="register"]'); const fLogin=$('#formLogin'), fReg=$('#formReg'), app=$('#app');
+function setTab(mode){ [tLogin,tReg].forEach(t=>t.classList.remove('active')); if(mode==='login'){tLogin.classList.add('active'); fLogin.classList.remove('hide'); fReg.classList.add('hide');} else {tReg.classList.add('active'); fReg.classList.remove('hide'); fLogin.classList.add('hide');} ok.style.display='none'; err.style.display='none';}
+tLogin.addEventListener('click',()=>setTab('login')); tReg.addEventListener('click',()=>setTab('register')); $('#toReg').addEventListener('click',e=>{e.preventDefault(); setTab('register')}); $('#toLog').addEventListener('click',e=>{e.preventDefault(); setTab('login')});
+
+/* ===== Eyes & meter ===== */
+$$('.eye').forEach(b=> b.addEventListener('click',()=>{ const id=b.dataset.target; const i=document.getElementById(id); i.type= i.type==='password'?'text':'password'; }));
+const regPwd=$('#regPwd'), regPwd2=$('#regPwd2'), meter=$('#meter'); const pwScore=p=>{let s=0; if(!p) return s; if(p.length>=8)s+=25; if(/[A-Z]/.test(p)&&/[a-z]/.test(p))s+=25; if(/\d/.test(p))s+=20; if(/[^\w\s]/.test(p))s+=20; if(p.length>=12)s+=10; return s;}
+if(regPwd) regPwd.addEventListener('input',()=> meter.style.width=Math.min(100,pwScore(regPwd.value))+'%');
+
+/* ===== Roles ===== */
+let roleSel=null; const roleStudent=$('#roleStudent'), roleBusiness=$('#roleBusiness');
+$$('.role').forEach(el=>{
+  el.addEventListener('mousemove',e=>{ const r=el.getBoundingClientRect(); const midX=r.width/2, midY=r.height/2; const rx=(e.clientX-r.left-midX)/midX*2; const ry=-(e.clientY-r.top-midY)/midY*2; el.style.transform=`rotateX(${ry*2}deg) rotateY(${rx*2}deg)`; });
+  el.addEventListener('mouseleave',()=> el.style.transform='');
+  el.addEventListener('click',()=>{ $$('.role').forEach(r=>r.classList.remove('active')); el.classList.add('active'); roleSel=el.dataset.role; if(roleSel==='student'){roleStudent.classList.remove('hide'); roleBusiness.classList.add('hide');} else {roleBusiness.classList.remove('hide'); roleStudent.classList.add('hide');} });
+});
+
+/* ===== Local demo DB ===== */
+const USERS='finbot_users_pretty', CUR='finbot_curr_pretty';
+function users(){ try{return JSON.parse(localStorage.getItem(USERS)||'[]')}catch{return[]} }
+function saveUsers(v){ localStorage.setItem(USERS, JSON.stringify(v)); }
+async function sha256(s){ const b=new TextEncoder().encode(s); const h=await crypto.subtle.digest('SHA-256',b); return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+
+/* ===== OTP demo (opcional, oculto) ===== */
+$('#sendOtp')?.addEventListener('click', ()=>{ const mail=$('#regMail').value.trim(); if(!/^\S+@\S+\.\S+$/.test(mail)) return showErr('Correo inválido para OTP.');
+  const code=String(Math.floor(100000+Math.random()*900000)); sessionStorage.setItem('finbot_otp', code); showOk('OTP enviado (demo).'); $('#otpWrap').classList.remove('hide'); });
+$('#verifyOtp')?.addEventListener('click', ()=>{ const code=sessionStorage.getItem('finbot_otp'); const val=$('#otp').value.trim(); if(val===code){ showOk('OTP verificado.'); } else showErr('Código incorrecto.'); });
+
+/* ===== Registro ===== */
+$('#formReg')?.addEventListener('submit', e=>{
+  e.preventDefault();
+  location.replace('app.html');
+});
+
+/* ===== Login ===== */
+$('#formLogin')?.addEventListener('submit', e=>{
+  e.preventDefault();
+  location.replace('app.html');
+});
+
+/* ===== Google (demo GIS) ===== */
+function handleCredentialResponse(response){
+  try{
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const user = { name: payload.name, email: payload.email, picture: payload.picture, provider: 'google', sub: payload.sub };
+    localStorage.setItem('finbot_curr_pretty', JSON.stringify(user));
+    localStorage.setItem('finbot_loggedin','1');
+    location.replace('app.html');
+  }catch(e){ showErr('No se pudo iniciar con Google.'); }
+}
+window.addEventListener('load', function(){
+  if(window.google && google.accounts && document.getElementById('googleLoginWrap')){
+    google.accounts.id.initialize({ client_id: '536379375381-01h0uc25uvdhnr9trnjt213600ed3cpt.apps.googleusercontent.com', callback: handleCredentialResponse });
+    try{ google.accounts.id.renderButton(document.getElementById('googleLoginWrap'), { theme:'outline', size:'large' }); }catch{}
+    try{ google.accounts.id.renderButton(document.getElementById('googleRegWrap'), { theme:'outline', size:'large' }); }catch{}
+  }
+});
+
+/* ===== Forgot (demo) ===== */
+$('#forgot')?.addEventListener('click',e=>{e.preventDefault(); const m=prompt('Ingresá tu correo (demo):'); if(m) showOk('Si existe, te enviamos un enlace (simulado).');});
+
+/* ===== Dashboard ===== */
+function setAvatar(name){ const el=$('#avatar'); const inits=(name||'F').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase(); el.textContent=inits||'F';
+  const hue=(inits.charCodeAt(0)*7 + (inits.charCodeAt(1)||0)*11)%360; el.style.background=`linear-gradient(180deg, hsl(${hue} 70% 66%), hsl(${(hue+40)%360} 70% 56%))`; }
+function bars(c, vals, rc){ const x=c.getContext('2d'), dpr=Math.max(1,devicePixelRatio||1); const W=(c.clientWidth||c.width)*dpr, H=c.height*dpr; c.width=W; c.height=H;
+  const pad=26*dpr, x0=pad*2, y0=H-pad, x1=W-pad, y1=pad; x.fillStyle='#0d1624'; x.fillRect(0,0,W,H); x.strokeStyle='rgba(255,255,255,.12)'; x.beginPath(); x.moveTo(x0,y0); x.lineTo(x0,y1); x.lineTo(x1,y1); x.stroke();
+  const labels=['MB','MO','MN'], colors=['#2EB67D','#4cc9f0','#9fb3c8'], bw=(x1-x0)/6;
+  labels.forEach((lb,i)=>{ const v=Math.max(0,Math.min(1,vals[i]||0)), X=x0+(i*2+1)*bw, h=(y0-y1)*v; x.fillStyle=colors[i]; x.fillRect(X,y0-h,bw,h); x.fillStyle='rgba(255,255,255,.9)'; x.font=`${12*dpr}px ui-sans-serif`; x.textAlign='center'; x.fillText(lb, X+bw/2, y0+14*dpr); });
+  const rcN=Math.min(2,Math.max(0,rc||0))/2, yRC=y0-(y0-y1)*rcN; x.strokeStyle='rgba(255,255,255,.85)'; x.lineWidth=2*dpr; x.beginPath(); x.moveTo(x0,yRC); x.lineTo(x1,yRC); x.stroke(); x.fillStyle='rgba(255,255,255,.9)'; x.textAlign='right'; x.fillText('RC', x1, yRC-6*dpr); }
+function enter(u){ $('#formLogin').classList.add('hide'); $('#formReg').classList.add('hide'); $('#app').classList.remove('hide');
+  $('#dName').textContent=u.name||'Usuario'; $('#dMail').textContent=u.email||''; $('#dRole').textContent=(u.role==='business'?'Empresario':'Estudiante'); setAvatar(u.name);
+  $('#kMB').textContent='62.0%'; $('#kRC').textContent='1.90'; $('#kET').textContent='45.0%'; bars($('#mainChart'), [0.62,0.38,0.22], 1.9); showOk('Sesión iniciada.'); }
+function exit(){
+  localStorage.removeItem(CUR);
+  localStorage.removeItem('finbot_loggedin');
+  location.replace('index.html');
+}
+$('#logout')?.addEventListener('click', exit);
+// Auto‑login desactivado para siempre mostrar el formulario de acceso
+// try{ const cur=JSON.parse(localStorage.getItem(CUR)||'null'); if(cur){ enter(cur);} }catch{}
+
+/* ===== Calc KPIs ===== */
+$('#calc')?.addEventListener('click', ()=>{ const ventas=val('ventas'), costo=val('costo'), gastos=val('gastos'), ac=val('ac'), pc=val('pc');
+  const MB = ventas? (ventas-costo)/ventas : NaN; const RC = pc? (ac/pc) : NaN; const activoEst = ac + (costo*0.37); const ET = activoEst? (pc/activoEst) : NaN;
+  $('#kMB').textContent = isFinite(MB)? (MB*100).toFixed(2)+'%':'—'; $('#kRC').textContent = isFinite(RC)? RC.toFixed(2):'—'; $('#kET').textContent = isFinite(ET)? (ET*100).toFixed(1)+'%':'—';
+  bars($('#mainChart'), [MB||0, Math.max(0,(ventas-costo-gastos)/Math.max(ventas,1))||0, (ventas?((ventas-costo-gastos)*0.7/ventas):0)||0], RC||0); });
+function val(id){ const n=parseFloat($('#'+id).value); return isFinite(n)?n:0; }
+
+/* ===== Wireframe 3D Globe ===== */
+(function globe(){
+  const c=$('#globe'); if(!c) return; const x=c.getContext('2d');
+  function size(){ c.width=c.clientWidth*devicePixelRatio; c.height=c.clientHeight*devicePixelRatio; }
+  size(); addEventListener('resize', size);
+  let t=0;
+  function proj(lon,lat,R){ const a= t*0.6; const x3 = R*Math.cos(lat)*Math.cos(lon+a); const y3 = R*Math.sin(lat); const z3 = R*Math.cos(lat)*Math.sin(lon+a); const d = 400; const s = d/(d - z3); return [c.width/2 + x3*s, c.height/2 + y3*s]; }
+  function render(){
+    x.clearRect(0,0,c.width,c.height);
+    const R = Math.min(c.width,c.height)*0.28;
+    x.beginPath(); x.arc(c.width/2, c.height/2, R*1.03, 0, Math.PI*2); x.strokeStyle='rgba(76,201,240,.25)'; x.lineWidth=2*devicePixelRatio; x.stroke();
+    x.lineWidth=1*devicePixelRatio;
+    for(let j=-60;j<=60;j+=15){
+      x.beginPath();
+      for(let i=-180;i<=180;i+=6){ const p=proj(i*Math.PI/180, j*Math.PI/180, R); (i===-180)?x.moveTo(p[0],p[1]):x.lineTo(p[0],p[1]); }
+      x.strokeStyle='rgba(255,255,255,.14)'; x.stroke();
+    }
+    for(let i=-180;i<=180;i+=15){
+      x.beginPath();
+      for(let j=-75;j<=75;j+=6){ const p=proj(i*Math.PI/180, j*Math.PI/180, R); (j===-75)?x.moveTo(p[0],p[1]):x.lineTo(p[0],p[1]); }
+      x.strokeStyle='rgba(46,182,125,.18)'; x.stroke();
+    }
+    t += 0.008;
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(render);
+  }
+  render();
+})();
+
+/* ===== Confetti (simple, sin libs) ===== */
+function confetti(){
+  const n=80, div=document.createElement('div'); div.style.position='fixed'; div.style.inset='0'; div.style.pointerEvents='none'; div.style.zIndex=9999; document.body.appendChild(div);
+  for(let i=0;i<n;i++){
+    const s=document.createElement('i'); const size=6+Math.random()*8;
+    s.style.position='absolute'; s.style.left=(Math.random()*100)+'%'; s.style.top='-10px'; s.style.width=size+'px'; s.style.height=size+'px'; s.style.borderRadius='2px';
+    s.style.background=['#2EB67D','#4CC9F0','#ffffff','#9fb3c8'][i%4]; s.style.opacity='0.95';
+    const dx=(Math.random()*2-1)*50, dur=1200+Math.random()*800; s.animate([
+      {transform:`translate(0,0) rotate(0deg)`},
+      {transform:`translate(${dx}px, 110vh) rotate(${Math.random()*720-360}deg)`}
+    ], {duration:dur, easing:'cubic-bezier(.2,.8,.2,1)', fill:'forwards'});
+    div.appendChild(s);
+  }
+  setTimeout(()=>div.remove(), 2000);
+}
+</script>
+</body>
+</html>

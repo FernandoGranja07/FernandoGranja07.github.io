@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aprende Diferente — FINBOT Web</title>
+  <meta name="description" content="Aprende finanzas jugando: flashcards de razones, vocabulario financiero y clasificador EOAF con ranking local y sonido.">
+  <link rel="icon" href="./assets/logo-finbot-web.png" type="image/png" />
+  <link rel="stylesheet" href="aprende-diferente.css">
+</head>
+<body>
+  <!-- Fondo de partículas -->
+  <canvas id="bg_fin_particles" aria-hidden="true"></canvas>
+
+  <!-- HEADER -->
+  <header class="ad-header">
+    <div class="ad-wrap">
+      <a class="brand" href="home.html">
+        <span class="brand-logo">◆</span>
+        FINBOT Web
+      </a>
+      <nav aria-label="Navegación principal">
+        <ul class="ad-nav">
+          <li><a href="#flashcards"> Flashcards</a></li>
+          <li><a href="#vocab"> Vocabulario</a></li>
+          <li><a href="#eoaf"> EOAF Sorter</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero_title">
+      <div class="ad-wrap hero-grid">
+        <div class="hero-copy">
+          <div class="pill pill-new">Nuevo modo</div>
+          <h1 id="hero_title">
+            Aprende finanzas jugando
+            <span class="emoji" aria-hidden="true"></span>
+          </h1>
+          <p class="sub">
+            Tres minijuegos conectados a tu ranking local: practica razones financieras,
+            domina vocabulario clave y clasifica orígenes y aplicaciones de fondos como si
+            estuvieras en examen.
+          </p>
+          <div class="cta">
+            <a class="btn primary" href="#flashcards">▶ Flashcards</a>
+            <a class="btn ghost" href="#vocab"> Vocabulario</a>
+            <a class="btn ghost" href="#eoaf"> EOAF Sorter</a>
+          </div>
+          <p class="hero-tip">Tip: todo se puede jugar con teclado. Mira los atajos de cada juego.</p>
+        </div>
+
+        <!-- HUD -->
+        <aside class="hero-hud" aria-label="Marcador general">
+          <div class="hud-title">Marcador FINBOT</div>
+          <div class="hud-grid">
+            <div class="hud-row">
+              <span>Puntaje</span>
+              <strong id="hud_score">0</strong>
+            </div>
+            <div class="hud-row">
+              <span>Combo</span>
+              <strong id="hud_combo">0x</strong>
+            </div>
+            <div class="hud-row">
+              <span>Tiempo</span>
+              <strong id="hud_time">0s</strong>
+            </div>
+            <div class="hud-row">
+              <span>Progreso</span>
+              <strong id="hud_prog">0/10</strong>
+            </div>
+          </div>
+          <div class="hud-rank">
+            <div class="hud-rank-title">Top 5 — Flashcards</div>
+            <ol id="hud_rank" class="hud-rank-list"></ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section id="flashcards" class="game-sec" aria-labelledby="flashcards_title">
+      <div class="ad-wrap">
+        <div class="sec-head">
+          <div>
+            <h2 id="flashcards_title">Flashcards Sprint — Razones</h2>
+            <p class="sec-sub">Identifica la fórmula correcta lo más rápido posible.</p>
+          </div>
+          <div class="meta">
+            <span class="pill">10 preguntas</span>
+            <span class="pill">10 s por pregunta</span>
+            <span class="pill meta-win">+10 por acierto</span>
+            <span class="pill meta-loss">−3 por fallo</span>
+          </div>
+        </div>
+
+        <div class="game-grid">
+          <article class="card card-main" aria-live="polite">
+            <div class="tool-row">
+              <button class="btn btn-icon" id="sound_toggle" aria-pressed="false">
+                <span class="icon">🔊</span>
+                <span class="label">Sonido: ON</span>
+              </button>
+              <div class="progress" aria-label="Progreso Flashcards">
+                <div id="flash_bar"></div>
+              </div>
+            </div>
+
+            <div id="flash_status" class="help">
+              Presiona “Iniciar” para comenzar.
+            </div>
+
+            <div id="flash_board" class="board" role="group" aria-label="Opciones de respuesta"></div>
+
+            <div class="actions">
+              <button id="flash_start" class="btn primary">Iniciar</button>
+              <button id="flash_retry" class="btn" style="display:none">Reintentar</button>
+            </div>
+          </article>
+
+          <aside class="card card-side">
+            <h3>Atajos de teclado</h3>
+            <ul class="kbl">
+              <li><span class="kbd">1</span> Opción 1</li>
+              <li><span class="kbd">2</span> Opción 2</li>
+              <li><span class="kbd">3</span> Opción 3</li>
+              <li><span class="kbd">R</span> Reintentar</li>
+            </ul>
+            <p class="help-note">
+              Consejo: responde antes de 4&nbsp;s para aprovechar mejor el bonus de tiempo.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- VOCAB -->
+    <section id="vocab" class="game-sec game-sec-alt" aria-labelledby="vocab_title">
+      <div class="ad-wrap">
+        <div class="sec-head">
+          <div>
+            <h2 id="vocab_title">Vocabulario Maestro — Finanzas</h2>
+            <p class="sec-sub">Escribe el término correcto según la definición.</p>
+          </div>
+          <div class="meta">
+            <span class="pill">12 conceptos</span>
+            <span class="pill meta-win">+10 acierto</span>
+            <span class="pill">Pistas con penalización suave</span>
+          </div>
+        </div>
+
+        <div class="game-grid">
+          <article class="card card-main" id="game_vocab" aria-live="polite">
+            <div class="tool-row">
+              <button class="btn btn-icon" id="sound_toggle_2" aria-pressed="false">
+                <span class="icon">🔊</span>
+                <span class="label">Sonido: ON</span>
+              </button>
+              <div class="progress" aria-label="Progreso Vocabulario">
+                <div id="vocab_bar"></div>
+              </div>
+            </div>
+
+            <div id="vocab_status" class="help">
+              Presiona "Iniciar" para comenzar.
+            </div>
+
+            <div class="vocab-wrap">
+              <div class="def" id="vocab_def">—</div>
+              <div class="answer-row">
+                <input
+                  id="vocab_answer"
+                  type="text"
+                  placeholder="Escribe el término…"
+                  autocomplete="off"
+                  aria-label="Respuesta de vocabulario"
+                />
+                <button class="btn ghost" id="vocab_hint">Pista</button>
+                <button class="btn primary" id="vocab_submit" disabled>Responder</button>
+              </div>
+              <div class="meta-row">
+                <span class="pill" id="vocab_prog">0/12</span>
+                <span class="pill" id="vocab_combo">0x</span>
+                <span class="pill" id="vocab_score">0 pts</span>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn primary" id="vocab_start">Iniciar</button>
+              <button class="btn" id="vocab_retry" style="display:none">Reintentar</button>
+            </div>
+          </article>
+
+          <aside class="card card-side" aria-label="Ranking Vocabulario">
+            <h3>Top 5 — Vocabulario</h3>
+            <ol id="vocab_rank" class="rank-list"></ol>
+            <p class="help-note">
+              Solo se guarda tu mejor puntuación por alias. Usa siempre el mismo nombre.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- EOAF -->
+    <section id="eoaf" class="game-sec" aria-labelledby="eoaf_title">
+      <div class="ad-wrap">
+        <div class="sec-head">
+          <div>
+            <h2 id="eoaf_title">EOAF Sorter</h2>
+            <p class="sec-sub">Clasifica cada variación como <strong>Origen</strong> o <strong>Aplicación</strong>.</p>
+          </div>
+          <div class="meta">
+            <span class="pill">8 ítems por ronda</span>
+            <span class="pill meta-win">+10 acierto</span>
+            <span class="pill meta-loss">−5 fallo</span>
+          </div>
+        </div>
+
+        <div class="game-grid">
+          <article class="card card-main" id="game_eoaf">
+            <div class="tool-row">
+              <button class="btn btn-icon" id="sound_toggle_3" aria-pressed="false">
+                <span class="icon">🔊</span>
+                <span class="label">Sonido: ON</span>
+              </button>
+              <div class="progress" aria-label="Progreso EOAF">
+                <div id="eoaf_bar"></div>
+              </div>
+            </div>
+
+            <div id="eoaf_status" class="help">
+              Clasifica cada ítem como Origen o Aplicación. Presiona "Iniciar".
+            </div>
+
+            <div class="eoaf-quiz">
+              <div id="eoaf_item" class="def eoaf-def">—</div>
+              <div class="answer-row answer-row-center">
+                <button class="btn primary" id="eoaf_btn_origen">Origen</button>
+                <button class="btn ghost" id="eoaf_btn_aplicacion">Aplicación</button>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn primary" id="eoaf_start">Iniciar</button>
+              <button class="btn" id="eoaf_retry" style="display:none">Reintentar</button>
+            </div>
+          </article>
+
+          <aside class="card card-side" aria-label="Ranking EOAF">
+            <h3>Top 5 — EOAF</h3>
+            <ol id="eoaf_rank" class="rank-list"></ol>
+            <p class="help-note">
+              Practica hasta que clasificar variaciones de balance te salga automático.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ad-footer">
+    <div class="ad-wrap">
+      <span>2025 · FINBOT Web</span>
+      <span class="footer-sep">•</span>
+      <span>Aprende Diferente</span>
+    </div>
+  </footer>
+
+  <script src="aprende-diferente.js" defer></script>
+</body>
+</html>

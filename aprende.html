@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>APRENDE CON FINBOT — Portal Educativo</title>
+  <link rel="icon" href="./assets/logo-finbot-web.png" type="image/png" />
+  <meta property="og:image" content="./assets/logo-finbot-web.png" />
+  <!-- Security policies -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), fullscreen=(), interest-cohort=()" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      --edu-bg:#050816;
+      --edu-surface:#070b12;
+      --edu-card:#0b1020;
+      --edu-border:#20263a;
+      --edu-border-soft:#2b3348;
+      --edu-accent:#06c399;
+      --edu-accent-soft:#22d3b6;
+      --edu-accent-alt:#3b82f6;
+      --edu-text:#e5e7eb;
+      --edu-muted:#9ca3af;
+      --edu-text-secondary:#cbd5f5;
+      --edu-radius-lg:18px;
+      --edu-radius-md:14px;
+      --edu-radius-pill:999px;
+      --edu-shadow-soft:0 16px 40px rgba(3,7,18,0.7);
+      --edu-shadow-subtle:0 10px 25px rgba(3,7,18,0.6);
+    }
+
+    *,:before,:after{box-sizing:border-box;}
+
+    html,body{
+      margin:0;
+      padding:0;
+      scroll-behavior:smooth;
+    }
+
+    body{
+      min-height:100vh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--edu-text);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      background:radial-gradient(circle at top,#111827 0,#020617 55%,#020617 100%);
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none;}
+    a:hover{color:var(--edu-accent-soft);}
+
+    :focus-visible{
+      outline:2px solid var(--edu-accent);
+      outline-offset:3px;
+    }
+
+    h1,h2,h3,h4{
+      margin:0 0 .35em;
+      font-weight:650;
+      letter-spacing:.01em;
+    }
+    h1{font-size:clamp(2.1rem,4vw,3rem);line-height:1.05;}
+    h2{font-size:clamp(1.5rem,2.3vw,1.9rem);}
+    h3{font-size:1.02rem;}
+    p{margin:.25em 0 .8em;color:var(--edu-muted);}
+
+    /* HERO */
+    header.hero{
+      position:relative;
+      padding:80px 16px 60px;
+      border-bottom:1px solid rgba(31,41,55,0.7);
+      background:linear-gradient(to bottom,#020617 0%,#020617 60%,#020617 100%);
+      overflow:hidden;
+    }
+    .hero-wrap{
+      max-width:1120px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);
+      gap:40px;
+      align-items:center;
+      position:relative;
+      z-index:2;
+    }
+    .hero-wrap > div:first-child{padding:4px 2px 2px;}
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      padding:8px 16px;
+      border-radius:var(--edu-radius-pill);
+      font-size:.75rem;
+      font-weight:750;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      background:rgba(17,24,39,0.9);
+      border:1px solid var(--edu-border);
+      color:#c7d2fe;
+      backdrop-filter:blur(10px);
+    }
+    .hero h1{
+      margin-top:16px;
+      background:linear-gradient(120deg,#f9fafb,#e5e7eb,#a5f3fc,#22d3b6);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      line-height:1.1;
+    }
+    .hero .sub{
+      color:#cbd5f5;
+      max-width:30rem;
+      font-size:1rem;
+      line-height:1.5;
+      margin-bottom:28px;
+    }
+    .hero .cta{
+      margin-top:24px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    /* BOTONES */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:12px 20px;
+      border-radius:var(--edu-radius-pill);
+      border:1px solid var(--edu-border-soft);
+      background:#020617;
+      color:var(--edu-text);
+      font-size:.9rem;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .2s ease;
+      white-space:nowrap;
+      position:relative;
+      overflow:hidden;
+    }
+    .btn::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+      transition:left .6s;
+    }
+    .btn:hover::before{left:100%;}
+    .btn.big{padding:14px 24px;font-size:.95rem;font-weight:650;}
+    .btn.primary{
+      background:linear-gradient(135deg,#06c399,#22c55e);
+      border-color:#059669;
+      color:#020617;
+      box-shadow:0 8px 25px rgba(6,194,153,0.4);
+    }
+    .btn:hover{
+      transform:translateY(-2px);
+      border-color:rgba(148,163,184,0.8);
+      box-shadow:var(--edu-shadow-subtle);
+    }
+    .btn.primary:hover{
+      box-shadow:0 12px 30px rgba(6,194,153,0.5);
+      transform:translateY(-2px);
+    }
+    .btn:active{transform:translateY(0);}
+
+    /* FONDO estrellas */
+    canvas#stars{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      opacity:.3;
+      z-index:1;
+    }
+
+    /* LOGO EN VEZ DE ORBE */
+    .logo-orb{
+      position:relative;
+      width:100%;
+      max-width:320px;
+      aspect-ratio:1/1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto;
+    }
+    .logo-glow{
+      position:absolute;
+      inset:12%;
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 20% 20%,rgba(6,195,153,0.25),transparent 55%),
+        radial-gradient(circle at 80% 80%,rgba(59,130,246,0.25),transparent 55%);
+      filter:blur(18px);
+      opacity:0.9;
+      animation:pulse 6s ease-in-out infinite;
+    }
+    .logo-img{
+      position:relative;
+      max-width:82%;
+      max-height:82%;
+      border-radius:24px;
+      box-shadow:
+        0 18px 45px rgba(0,0,0,0.75),
+        0 0 0 1px rgba(148,163,184,0.2),
+        0 0 40px rgba(34,211,238,0.25);
+      background:#020617;
+      object-fit:contain;
+      animation:float 6s ease-in-out infinite;
+    }
+    @keyframes float{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-10px);}
+    }
+    @keyframes pulse{
+      0%,100%{transform:scale(1);opacity:0.9;}
+      50%{transform:scale(1.06);opacity:1;}
+    }
+
+    /* SECCIONES */
+    .sect{
+      max-width:1120px;
+      margin:40px auto;
+      padding:0 16px;
+    }
+    .sect > h2{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:24px;
+      position:relative;
+    }
+    .sect > h2::after{
+      content:'';
+      position:absolute;
+      bottom:-8px;
+      left:0;
+      width:60px;
+      height:3px;
+      background:linear-gradient(90deg,var(--edu-accent),var(--edu-accent-soft));
+      border-radius:2px;
+    }
+
+    .card{
+      position:relative;
+      padding:18px 18px 20px;
+      border-radius:var(--edu-radius-lg);
+      background:var(--edu-card);
+      border:1px solid var(--edu-border);
+      box-shadow:var(--edu-shadow-soft);
+      transition:all .3s ease;
+      overflow:hidden;
+    }
+    .card::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:3px;
+      background:linear-gradient(90deg,var(--edu-accent),var(--edu-accent-soft));
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:18px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:18px;
+    }
+    .topic{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:18px;
+      align-items:flex-start;
+    }
+
+    .mini{font-size:.8rem;color:var(--edu-muted);font-weight:600;}
+
+    /* FORMATO FÓRMULAS */
+    pre.formula{
+      margin:.4rem 0;
+      padding:10px 12px;
+      border-radius:12px;
+      background:#020617;
+      border:1px solid #111827;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:.86rem;
+      color:#e5f2ff;
+      white-space:pre-wrap;
+      line-height:1.4;
+      overflow-x:auto;
+    }
+
+    /* ANIMACIÓN CARDS */
+    .tilt{
+      transition:transform .2s ease, box-shadow .2s ease, opacity .4s ease, filter .4s ease;
+      transform:translateY(10px);
+      opacity:0;
+      filter:blur(4px);
+    }
+    .tilt.reveal{
+      opacity:1;
+      filter:blur(0);
+      transform:translateY(0);
+    }
+    .tilt:hover{
+      transform:translateY(-5px);
+      box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    /* ACCORDION TEORÍA */
+    .accordion details{
+      margin:10px 0;
+      border-radius:16px;
+      border:1px solid var(--edu-border);
+      overflow:hidden;
+      background:#020617;
+      transition:all .3s ease;
+    }
+    .accordion details:hover{
+      border-color:var(--edu-accent-soft);
+      box-shadow:0 8px 25px rgba(6,195,153,0.1);
+    }
+    .accordion summary{
+      cursor:pointer;
+      padding:14px 18px;
+      list-style:none;
+      font-weight:650;
+      font-size:.95rem;
+      background:#020617;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:#e5e7eb;
+      transition:all .2s ease;
+    }
+    .accordion summary:hover{background:#0b1120;}
+    .accordion summary::-webkit-details-marker{display:none;}
+    .accordion summary::after{
+      content:"+";
+      font-weight:700;
+      font-size:1.1rem;
+      color:var(--edu-accent);
+      transition:transform .3s ease,color .3s ease;
+    }
+    .accordion details[open] summary::after{
+      transform:rotate(45deg);
+      color:var(--edu-accent-alt);
+    }
+    .accordion .grid{
+      padding:16px 18px 18px;
+      background:#020617;
+      gap:14px;
+    }
+    .accordion .card{
+      background:#020617;
+      border:1px solid #0b1120;
+      box-shadow:none;
+      border-radius:var(--edu-radius-md);
+      padding:14px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:var(--edu-radius-pill);
+      border:1px solid var(--edu-border);
+      background:#020617;
+      font-size:.85rem;
+      color:var(--edu-muted);
+    }
+
+    /* PROGRESO */
+    .progress{
+      margin-top:10px;
+      height:8px;
+      border-radius:var(--edu-radius-pill);
+      border:1px solid var(--edu-border-soft);
+      background:#020617;
+      overflow:hidden;
+      position:relative;
+    }
+    .progress > span{
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#06c399,#22c55e);
+      border-radius:var(--edu-radius-pill);
+      transition:width 1s ease;
+      position:relative;
+    }
+
+    /* RAZONES: FLIP CARDS */
+    .ratio-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+    }
+    .ratio-group{margin:22px 0;}
+    .ratio-title{
+      display:inline-flex;
+      align-items:center;
+      padding:6px 16px;
+      border-radius:var(--edu-radius-pill);
+      border:1px solid var(--edu-border);
+      background:#020617;
+      font-weight:700;
+      font-size:.82rem;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--edu-accent-soft);
+      margin-bottom:10px;
+    }
+    .flip{
+      perspective:1000px;
+      display:block;
+      background:transparent;
+      border:none;
+      padding:0;
+      cursor:pointer;
+      text-align:left;
+      height:170px;
+    }
+    .flip .flip-inner{
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .5s cubic-bezier(.2,.8,.2,1);
+      border-radius:16px;
+      border:1px solid var(--edu-border);
+      background:#020617;
+      height:100%;
+      box-shadow:var(--edu-shadow-subtle);
+      overflow:hidden;
+    }
+    .flip .face{
+      position:absolute;
+      inset:0;
+      padding:16px;
+      backface-visibility:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:6px;
+      border-radius:inherit;
+      color:#e5e7eb;
+    }
+    /* Estilos para las tarjetas de razones financieras */
+    .ratio-card {
+      position: relative;
+      width: 100%;
+      min-height: 220px;
+      perspective: 1000px;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      background: transparent;
+      border: none;
+      padding: 0;
+      text-align: left;
+      outline: none;
+    }
+
+    .ratio-card .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .ratio-card.is-flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .ratio-card .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #121821 0%, #0f141b 100%);
+      border: 1px solid #253041;
+      color: #e6edf3;
+    }
+
+    .ratio-card .face.front {
+      justify-content: space-between;
+    }
+
+    .ratio-card .face.back {
+      transform: rotateY(180deg);
+      overflow-y: auto;
+    }
+
+    .ratio-card h4 {
+      color: #4cc9f0 !important;
+      margin: 0 0 12px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .ratio-card .formula {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.8rem;
+      border-radius: 0.5rem;
+      margin: 0.5rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      border-left: 3px solid #4cc9f0;
+      color: #e6edf3;
+      line-height: 1.5;
+    }
+
+    .ratio-card .guia {
+      margin-top: auto;
+      padding-top: 0.75rem;
+      border-top: 1px solid #2d3748;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .ratio-card .ejemplo {
+      margin: 0.75rem 0;
+    }
+
+    .ratio-card .interpretacion {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: rgba(6, 195, 153, 0.1);
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #e6edf3;
+    }
+
+    /* Ajustes para el grid de tarjetas */
+    .ratio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .ratio-group {
+      margin-bottom: 2.5rem;
+    }
+
+    .ratio-group:last-child {
+      margin-bottom: 1rem;
+    }
+
+    .ratio-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #4cc9f0;
+      margin: 0 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #2d3748;
+    }
+
+    .flip .back {
+      transform: rotateY(180deg);
+      background: #0f141b;
+    }
+    .flip h4{
+      font-size:1rem;
+      margin-bottom:2px;
+      color:#f1f5f9;
+    }
+    .flip .mini{
+      font-size:.74rem;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      font-weight:700;
+      color:var(--edu-muted);
+    }
+    .flip .face div{font-size:.88rem;line-height:1.4;}
+    .flip.is-flipped .flip-inner{transform:rotateY(180deg);}
+
+    /* TABLA EOAF */
+    .eoaf-table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      margin-top:12px;
+      font-size:.88rem;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid var(--edu-border);
+    }
+    .eoaf-table th,
+    .eoaf-table td{
+      border:1px solid #111827;
+      padding:8px 10px;
+      background:#020617;
+    }
+    .eoaf-table th{
+      background:#020617;
+      text-align:left;
+      font-weight:650;
+      color:#e5e7eb;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+    .eoaf-table tbody tr:nth-child(even) td{background:#030712;}
+    .eoaf-table tbody tr:hover td{background:#0b1120;}
+    .eoaf-table tfoot td{
+      font-weight:700;
+      background:#020617;
+      color:var(--edu-accent-soft);
+    }
+
+    /* FORM INPUTS */
+    label{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      font-weight:600;
+      color:var(--edu-text-secondary);
+      font-size:.86rem;
+    }
+    input,select{
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--edu-border);
+      background:rgba(15,30,50,0.5);
+      color:var(--edu-text);
+      font-size:.88rem;
+      transition:all .2s ease;
+    }
+    input:focus,select:focus{
+      outline:none;
+      border-color:var(--edu-accent);
+      box-shadow:0 0 0 3px rgba(6,195,153,0.2);
+      background:rgba(15,30,50,0.8);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    /* ELEMENTOS FLOTANTES DECORATIVOS */
+    .floating-elements{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      z-index:0;
+    }
+    .floating-element{
+      position:absolute;
+      border-radius:50%;
+      background:rgba(6,195,153,0.06);
+      filter:blur(40px);
+      animation:float-element 15s ease-in-out infinite;
+    }
+    .element-1{width:260px;height:260px;top:12%;left:8%;}
+    .element-2{width:200px;height:200px;top:62%;right:10%;animation-delay:5s;}
+    .element-3{width:150px;height:150px;bottom:18%;left:18%;animation-delay:10s;}
+    @keyframes float-element{
+      0%,100%{transform:translate(0,0) scale(1);}
+      25%{transform:translate(20px,-20px) scale(1.05);}
+      50%{transform:translate(-15px,15px) scale(0.95);}
+      75%{transform:translate(10px,-10px) scale(1.02);}
+    }
+
+    /* RESPONSIVE */
+    @media (max-width:900px){
+      header.hero{padding:60px 14px 40px;}
+      .hero-wrap{
+        grid-template-columns:1fr;
+        gap:28px;
+        text-align:center;
+      }
+      .hero-wrap > div:last-child{
+        max-width:260px;
+        margin:0 auto;
+      }
+      .hero .cta{justify-content:center;}
+      .grid,.topic{grid-template-columns:1fr;}
+      .sect > h2{justify-content:center;}
+      .sect > h2::after{left:50%;transform:translateX(-50%);}
+    }
+    @media (max-width:640px){
+      .grid-2{grid-template-columns:1fr;}
+      .ratio-grid{grid-template-columns:1fr;}
+      .card{padding:16px;border-radius:14px;}
+      .accordion .grid{padding:14px;}
+      .flip .face{padding:14px;}
+      .btn.big{padding:12px 20px;font-size:.9rem;}
+      .hero h1{font-size:1.8rem;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Elementos flotantes decorativos -->
+  <div class="floating-elements">
+    <div class="floating-element element-1"></div>
+    <div class="floating-element element-2"></div>
+    <div class="floating-element element-3"></div>
+  </div>
+
+  <header class="hero" aria-label="Portada educativa">
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="hero-wrap">
+      <div>
+        <div class="badge">
+          <i class="fas fa-graduation-cap"></i>
+          APRENDE CON FINBOT
+        </div>
+        <h1>Portal Educativo FinBot Educa</h1>
+        <p class="sub">Conceptos, ejemplos y ejercicios para dominar finanzas con una experiencia clara y guiada.</p>
+        <div class="cta">
+          <a class="btn big primary" href="#rutas" id="cta_start">
+            <i class="fas fa-play-circle"></i> Comenzar
+          </a>
+          <a class="btn big" href="#formularios" id="cta_resources">
+            <i class="fas fa-file-alt"></i> Formularios
+          </a>
+          <a class="btn big" href="#" id="cta_app">
+            <i class="fas fa-rocket"></i> Practicar en la APP
+          </a>
+        </div>
+      </div>
+      <!-- AQUÍ VA TU LOGO -->
+      <div class="logo-orb">
+        <div class="logo-glow"></div>
+        <img src="./assets/logo-finbot-web.png" alt="Logo FINBOT" class="logo-img">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TEORÍA -->
+    <section id="teoria" class="sect" aria-label="Teoría y fundamentos">
+      <h2><span class="badge">Teoría</span> Por temas</h2>
+      <div class="pill" style="margin-bottom:12px; background:rgba(6,195,153,0.06); border-color:rgba(6,195,153,0.3);">
+        <i class="fas fa-lightbulb"></i>
+        Haz clic en cada tema para ver ¿Qué es?, ¿Para qué sirve?, ¿Cómo se hace?, fórmula, ejemplo y errores comunes.
+      </div>
+
+      <div class="accordion">
+        <!-- AH -->
+        <details class="card" open>
+          <summary><strong>AH — Análisis Horizontal</strong></summary>
+          <div class="grid">
+            <div class="card"><h4>¿Qué es?</h4><p>Comparación entre dos periodos que mide cuánto variaron las cuentas.</p></div>
+            <div class="card"><h4>¿Para qué sirve?</h4><p>Detectar tendencias, crecimientos atípicos y cuentas que explican los cambios.</p></div>
+            <div class="card"><h4>¿Cómo se hace?</h4><p>Se calcula la diferencia (Δ) y luego el porcentaje de variación.</p></div>
+            <div class="card">
+              <h4>Fórmula</h4>
+              <pre class="formula">Δ   =  Valor t₂ − Valor t₁
+%Δ  =  Δ / |Valor t₁|</pre>
+            </div>
+            <div class="card">
+              <h4>Ejemplo</h4>
+              <pre class="formula">Inventario: 80 → 92
+Δ   = 92 − 80  = 12
+%Δ  = 12 / 80  = 0.15 = 15 %</pre>
+            </div>
+            <div class="card">
+              <h4>Errores comunes</h4>
+              <ul>
+                <li>Dividir entre el valor de t₂ en lugar de t₁.</li>
+                <li>Comparar cuentas de naturaleza distinta.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- AV -->
+        <details class="card">
+          <summary><strong>AV — Análisis Vertical</strong></summary>
+          <div class="grid">
+            <div class="card"><h4>¿Qué es?</h4><p>Mide el peso de cada cuenta respecto a una base: TA/TPP en BG o Ventas en ER.</p></div>
+            <div class="card"><h4>¿Para qué sirve?</h4><p>Entender la estructura y el peso relativo de los rubros.</p></div>
+            <div class="card"><h4>¿Cómo se hace?</h4><p>Se divide el monto de la cuenta entre la base y se expresa en porcentaje.</p></div>
+            <div class="card">
+              <h4>Fórmula</h4>
+              <pre class="formula">%Cuenta_BG = Cuenta / Total Activo (o TPP)
+%Cuenta_ER = Cuenta / Ventas</pre>
+            </div>
+            <div class="card">
+              <h4>Ejemplo</h4>
+              <pre class="formula">Inventario   = 110
+Total Activo = 260
+
+%Inventario  = 110 / 260 ≈ 42.3 %</pre>
+            </div>
+            <div class="card">
+              <h4>Errores comunes</h4>
+              <ul>
+                <li>Usar base equivocada (mezclar TA con TPP).</li>
+                <li>Mezclar porcentajes de BG con ER.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- EOAF -->
+        <details class="card">
+          <summary><strong>EOAF — Origen y Aplicación de Fondos</strong></summary>
+          <div class="grid">
+            <div class="card"><h4>¿Qué es?</h4><p>Estado que explica de dónde salieron los fondos (orígenes) y en qué se usaron (aplicaciones) entre dos periodos.</p></div>
+            <div class="card"><h4>¿Para qué sirve?</h4><p>Analizar cómo se financió el crecimiento y hacia dónde se dirigió el dinero.</p></div>
+            <div class="card"><h4>¿Cómo se hace?</h4><p>Se toman variaciones del BG y se clasifican según si son activos, pasivos o patrimonio.</p></div>
+            <div class="card">
+              <h4>Reglas</h4>
+              <pre class="formula">Activo   ↑  ⇒ Aplicación      Activo   ↓  ⇒ Origen
+Pasivo / Patrimonio ↑  ⇒ Origen   ↓  ⇒ Aplicación</pre>
+            </div>
+            <div class="card">
+              <h4>Ejemplo</h4>
+              <pre class="formula">Act. fijo +20  → Aplicación 20
+Deuda LP +15   → Origen 15</pre>
+            </div>
+            <div class="card">
+              <h4>Errores comunes</h4>
+              <ul>
+                <li>Cambiar signos y voltear origen/aplicación.</li>
+                <li>Mezclar cuentas operativas y de capital sin criterio.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- RAZONES -->
+        <details class="card">
+          <summary><strong>Razones financieras</strong></summary>
+          <div class="grid">
+            <div class="card"><h4>¿Qué es?</h4><p>Relaciones entre partidas para evaluar liquidez, actividad, deuda y rentabilidad.</p></div>
+            <div class="card"><h4>¿Para qué sirve?</h4><p>Comparar desempeño, riesgos y metas con estándares internos o del sector.</p></div>
+            <div class="card"><h4>¿Cómo se hace?</h4><p>Se aplican fórmulas estándar y se comparan los resultados con rangos de referencia.</p></div>
+            <div class="card">
+              <h4>Fórmulas clave</h4>
+              <pre class="formula">RC   =  AC / PC
+RR   =  (AC − Inventario) / PC
+
+RotInv   =  Costo de ventas / Inventario prom.
+RotCxC   =  Ventas (crédito) / CxC prom.
+PPC      =  360 / Rotación CxC
+
+Endeudamiento = Pasivo total / Total activo
+
+MN   =  UN / Ventas
+ROA  =  UN / Total activo</pre>
+            </div>
+            <div class="card">
+              <h4>Ejemplo rápido</h4>
+              <pre class="formula">AC=150; PC=100 → RC=1.5x
+UN=90; Ventas=900 → MN=10 %</pre>
+            </div>
+            <div class="card">
+              <h4>Errores comunes</h4>
+              <ul>
+                <li>Usar saldos puntuales en lugar de promedios (inventario, CxC).</li>
+                <li>No interpretar el contexto (sector, tamaño, ciclo).</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- INTERPRETACIÓN -->
+        <details class="card">
+          <summary><strong>Interpretación</strong></summary>
+          <div class="grid">
+            <div class="card"><h4>¿Qué es?</h4><p>Traducción de los números a causas, efectos y decisiones concretas.</p></div>
+            <div class="card"><h4>¿Para qué sirve?</h4><p>Transformar los indicadores en acciones: liquidez, inversión, deuda, precios, etc.</p></div>
+            <div class="card"><h4>¿Cómo se hace?</h4><p>Relacionando las razones con la operación: rotaciones, plazos, márgenes y cobertura.</p></div>
+            <div class="card">
+              <h4>Matriz guía</h4>
+              <pre class="formula">Hallazgo → Causa probable → Riesgo → Acción priorizada</pre>
+            </div>
+            <div class="card">
+              <h4>Ejemplo</h4>
+              <pre class="formula">PPC > 60 días
+→ Crédito laxo / mala cobranza
+→ Riesgo de liquidez
+→ Ajustar políticas y reforzar cobros</pre>
+            </div>
+            <div class="card">
+              <h4>Errores comunes</h4>
+              <ul>
+                <li>Quedarse solo en “está alto / está bajo”.</li>
+                <li>No priorizar qué atacar primero.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- EFE -->
+        <details class="card">
+          <summary><strong>EFE — Estado de Flujo de Efectivo</strong></summary>
+          <div class="grid">
+            <div class="card"><h4>¿Qué es?</h4><p>Estado que muestra los movimientos de efectivo en Operación, Inversión y Financiamiento.</p></div>
+            <div class="card"><h4>¿Para qué sirve?</h4><p>Evaluar la capacidad de generar efectivo, invertir y sostener la estructura de deuda.</p></div>
+            <div class="card">
+              <h4>¿Cómo se hace?</h4>
+              <p>
+                <strong>Método directo:</strong> estima cobros y pagos operativos.<br>
+                <strong>Método indirecto:</strong> parte de la utilidad neta y ajusta partidas sin efectivo y capital de trabajo.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Fórmulas (resumen)</h4>
+              <pre class="formula">Directo
+Cobros  ≈ Ventas − ΔCxC
+Compras ≈ Costo de ventas + ΔInventario
+Pagos a prov. ≈ Compras − ΔCxP
+
+Indirecto
+CFO = UN + partidas sin efectivo − ΔAC operativos + ΔPasivos operativos</pre>
+            </div>
+            <div class="card">
+              <h4>Ejemplo mini</h4>
+              <pre class="formula">UN=127; ΔCxC=+10; ΔInv=+10; ΔCxP=+5
+CFO_indirecto ≈ 127 − 10 − 10 + 5 = 112 (más ajustes)</pre>
+            </div>
+            <div class="card">
+              <h4>Errores comunes</h4>
+              <ul>
+                <li>No conciliar ΔEfectivo con BG.</li>
+                <li>Clasificar mal pagos/ cobros entre CFO, CFI y CFF.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- DuPont -->
+        <details class="card">
+          <summary><strong>DuPont — Modelo de 3 pasos</strong></summary>
+          <div class="grid">
+            <div class="card"><h4>¿Qué es?</h4><p>Modelo que descompone el ROE en margen, rotación de activos y apalancamiento.</p></div>
+            <div class="card"><h4>¿Para qué sirve?</h4><p>Identificar si el ROE proviene de rentabilidad, eficiencia o endeudamiento.</p></div>
+            <div class="card"><h4>¿Cómo se hace?</h4><p>Se calculan los 3 componentes con el mismo periodo y se multiplican.</p></div>
+            <div class="card">
+              <h4>Fórmulas</h4>
+              <pre class="formula">PM  =  UN / Ventas
+AT  =  Ventas / Activo total promedio
+EM  =  Activo total / Patrimonio
+
+ROE =  PM × AT × EM</pre>
+            </div>
+            <div class="card">
+              <h4>Ejemplo mini</h4>
+              <pre class="formula">UN=127; V=980
+TA_prom≈700; PAT=365
+PM≈13 %; AT≈1.4x; EM≈1.9x
+ROE ≈ 0.13 × 1.4 × 1.9</pre>
+            </div>
+            <div class="card">
+              <h4>Errores comunes</h4>
+              <ul>
+                <li>Usar TA de un solo año (no promedio).</li>
+                <li>Interpretar ROE alto sin revisar el apalancamiento.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- Proforma -->
+        <details class="card">
+          <summary><strong>Proforma — Proyecciones Financieras</strong></summary>
+          <div class="grid">
+            <div class="card">
+              <h4>1. Estado de Resultados</h4>
+              <pre class="formula">Ventasₚ = Ventas₀ × (1 + g)
+EBIT = Ventas - Costos - Gastos Operativos - Depreciación
+EBT = EBIT - Intereses
+Utilidad Neta = EBT × (1 - t)
+Utilidad Retenida = Utilidad Neta × (1 - payout%)</pre>
+              <p><strong>Donde:</strong><br>
+              g = tasa crecimiento ventas<br>
+              t = tasa de impuestos<br>
+              payout% = % de utilidad repartido como dividendos</p>
+            </div>
+
+            <div class="card">
+              <h4>2. Balance General</h4>
+              <p><strong>Activos Corrientes:</strong></p>
+              <pre class="formula">CxC = (Ventas/365) × DSO
+Inventario = (Costo/365) × DIO
+Caja = % de ventas o saldo mínimo</pre>
+              
+              <p><strong>Pasivos Corrientes:</strong></p>
+              <pre class="formula">CxP = (Costo/365) × DPO
+Deuda CP = según política</pre>
+              
+              <p><strong>Activo Fijo Neto:</strong></p>
+              <pre class="formula">AFN = AFN₀ + CapEx - Depreciación</pre>
+            </div>
+
+            <div class="card">
+              <h4>3. Flujo de Efectivo</h4>
+              <p><strong>Operación (FEO):</strong></p>
+              <pre class="formula">FEO = Utilidad Neta + Depreciación
+     - ΔCxC - ΔInventario + ΔCxP
+     ± Otros ajustes</pre>
+              
+              <p><strong>Inversión (FEI):</strong></p>
+              <pre class="formula">FEI = -CapEx + Venta de Activos</pre>
+              
+              <p><strong>Financiamiento (FEF):</strong></p>
+              <pre class="formula">FEF = +Nueva Deuda - Amortización
+     +Aportes - Dividendos</pre>
+              
+              <p><strong>ΔCaja = FEO + FEI + FEF</strong></p>
+            </div>
+
+            <div class="card">
+              <h4>Ratios Clave</h4>
+              <pre class="formula">DSO = (CxC/Ventas) × 365
+DIO = (Inventario/Costo) × 365
+DPO = (CxP/Costo) × 365
+
+Ciclo de Efectivo = DIO + DSO - DPO</pre>
+            </div>
+
+            <div class="card">
+              <h4>Método del Enchufe</h4>
+              <p>Para equilibrar el balance:</p>
+              <pre class="formula">Necesidad = Activo Total - (Pasivo + Patrimonio)</pre>
+              <p>Si es positivo → Financiar con deuda o capital<br>
+              Si es negativo → Reducir caja o amortizar deuda</p>
+            </div>
+
+            <div class="card">
+              <h4>Supuestos Clave</h4>
+              <ul>
+                <li>% de ventas para cuentas operativas</li>
+                <li>Días de cobro (DSO), inventario (DIO), pago (DPO)</li>
+                <li>Tasas de crecimiento</li>
+                <li>Políticas de dividendos</li>
+                <li>Necesidades de inversión (CapEx)</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- RUTAS -->
+    <section id="rutas" class="sect" aria-label="Rutas de aprendizaje">
+      <h2><span class="badge">Rutas</span> De estudio</h2>
+      <div class="grid">
+        <div class="card tilt">
+          <div class="badge">Ruta 1</div>
+          <h3>Estados Financieros</h3>
+          <p>Balance General y Estado de Resultados con AV/AH.</p>
+          <div class="progress"><span id="p1"></span></div>
+        </div>
+        <div class="card tilt">
+          <div class="badge">Ruta 2</div>
+          <h3>KPI y Razones</h3>
+          <p>Liquidez, Actividad, Endeudamiento, Rentabilidad, Cobertura.</p>
+          <div class="progress"><span id="p2"></span></div>
+        </div>
+        <div class="card tilt">
+          <div class="badge">Ruta 3</div>
+          <h3>Interpretación Heurística</h3>
+          <p>Diagnóstico por bloques, alertas y acciones.</p>
+          <div class="progress"><span id="p3"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCEPTOS -->
+    <section id="conceptos" class="sect" aria-label="Conceptos clave">
+      <h2><span class="badge">Conceptos</span> Esenciales</h2>
+      <div class="topic">
+        <div class="card tilt">
+          <h3>Balance General</h3>
+          <p>Foto de la estructura financiera: Activos, Pasivos y Patrimonio.</p>
+          <ul>
+            <li>AV: peso de cada cuenta vs TA/TPP.</li>
+            <li>AH: variaciones entre periodos.</li>
+          </ul>
+        </div>
+        <div class="card tilt">
+          <h3>Estado de Resultados</h3>
+          <p>Resumen de desempeño: Ventas, Costos, Gastos, Intereses y Utilidad.</p>
+          <ul>
+            <li>MUB = UB / Ventas</li>
+            <li>MUO = UO / Ventas</li>
+            <li>MN  = UN / Ventas</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALCULADORA -->
+    <section id="calcfin" class="sect" aria-label="Calculadora financiera">
+      <h2><span class="badge">Calculadora</span> Financiera</h2>
+      <div class="grid-2">
+        <div class="card tilt">
+          <h3>AH — Análisis Horizontal</h3>
+          <div class="grid">
+            <label>Valor t1
+              <input id="cf_ah_t1" type="number" step="0.01" />
+            </label>
+            <label>Valor t2
+              <input id="cf_ah_t2" type="number" step="0.01" />
+            </label>
+          </div>
+          <button class="btn" id="cf_ah_calc" style="margin-top:10px;"><i class="fas fa-calculator"></i> Calcular</button>
+          <div id="cf_ah_out" class="pill" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="card tilt">
+          <h3>AV — Análisis Vertical</h3>
+          <div class="grid">
+            <label>Monto de la cuenta
+              <input id="cf_av_cuenta" type="number" step="0.01" />
+            </label>
+            <label>Base (TA/TPP o Ventas)
+              <input id="cf_av_base" type="number" step="0.01" />
+            </label>
+          </div>
+          <button class="btn" id="cf_av_calc" style="margin-top:10px;"><i class="fas fa-percentage"></i> Calcular</button>
+          <div id="cf_av_out" class="pill" style="margin-top:10px;"></div>
+        </div>
+      </div>
+
+      <div class="card tilt" style="margin-top:18px">
+        <h3>EOAF — Origen y Aplicación</h3>
+        <div class="grid">
+          <label>Δ Cuenta (t2 − t1)
+            <input id="cf_eoaf_delta" type="number" step="0.01" />
+          </label>
+          <label>Tipo de cuenta
+            <select id="cf_eoaf_tipo">
+              <option value="AC">Activo Corriente</option>
+              <option value="ANC">Activo No Corriente</option>
+              <option value="PC">Pasivo Corriente</option>
+              <option value="PNC">Pasivo No Corriente</option>
+              <option value="PAT">Patrimonio</option>
+            </select>
+          </label>
+        </div>
+        <div class="actions">
+          <button class="btn" id="cf_eoaf_add"><i class="fas fa-plus"></i> Agregar a tabla</button>
+          <button class="btn" id="cf_eoaf_clear"><i class="fas fa-eraser"></i> Limpiar</button>
+        </div>
+        <table class="eoaf-table" id="cf_eoaf_table" aria-label="Tabla EOAF">
+          <thead>
+            <tr><th>Tipo</th><th>Δ</th><th>Clasificación</th></tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr><td colspan="3" id="cf_eoaf_tot">Origen: 0 | Aplicación: 0</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- AH -->
+    <section id="ah" class="sect" aria-label="Análisis Horizontal (AH)">
+      <h2><span class="badge">AH</span> Análisis Horizontal</h2>
+      <div class="topic">
+        <div class="card tilt">
+          <h3>Concepto</h3>
+          <p>Compara la variación de cada cuenta entre dos periodos (Δ y %Δ).</p>
+          <pre class="formula">Δ   =  Valor t₂ − Valor t₁
+%Δ  =  Δ / |Valor t₁|</pre>
+        </div>
+        <div class="card tilt">
+          <h3>Ejemplo resuelto</h3>
+          <pre class="formula">Inventario: t₁=80, t₂=92 → Δ=12, %Δ=15 %
+Ventas:     t₁=900, t₂=980 → Δ=80, %Δ≈8.9 %</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- AV -->
+    <section id="av" class="sect" aria-label="Análisis Vertical (AV)">
+      <h2><span class="badge">AV</span> Análisis Vertical</h2>
+      <div class="topic">
+        <div class="card tilt">
+          <h3>Concepto</h3>
+          <p>Expresa cada cuenta como porcentaje de una base (TA/TPP o Ventas).</p>
+        </div>
+        <div class="card tilt">
+          <h3>Fórmulas</h3>
+          <pre class="formula">BG: %Cuenta  =  Cuenta / Total Activo (o TPP)
+ER: %Cuenta  =  Cuenta / Ventas</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- EOAF -->
+    <section id="eoaf" class="sect" aria-label="EOAF (Estados de Origen y Aplicación de Fondos)">
+      <h2><span class="badge">EOAF</span> Estados de Origen y Aplicación de Fondos</h2>
+      <div class="topic">
+        <div class="card tilt">
+          <h3>Concepto</h3>
+          <p>Explica de dónde surgieron fondos y en qué se aplicaron usando variaciones del BG.</p>
+        </div>
+        <div class="card tilt">
+          <h3>Reglas rápidas</h3>
+          <pre class="formula">Activos ↑  ⇒ Aplicación;  Activos ↓  ⇒ Origen
+Pasivos / Patrimonio ↑  ⇒ Origen;  ↓  ⇒ Aplicación</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- RAZONES: FLIP CARDS -->
+    <section id="razones" class="sect" aria-label="Razones Financieras">
+      <h2><span class="badge">Razones</span> Financieras</h2>
+      <p class="mini" style="margin-bottom: 1.5rem;">Haz clic en una tarjeta para ver el ejemplo y la interpretación.</p>
+      <div id="ratioGroups"></div>
+    </section>
+
+    <!-- FORMULARIOS / PDF -->
+    <section id="formularios" class="sect" aria-label="Formularios Imprimibles">
+      <h2><span class="badge">Material</span> Imprimible</h2>
+
+      <div class="card tilt" style="margin-bottom:14px">
+        <h3><i class="fas fa-book"></i> PDF de fórmulas</h3>
+        <p class="mini">Descarga o imprime el formulario con las fórmulas clave de FINBOT.</p>
+        <div class="actions">
+          <a class="btn" id="pdf_formulas_dl" href="docs/formulas.pdf" download><i class="fas fa-download"></i> Descargar PDF</a>
+          <button class="btn" type="button" id="pdf_formulas_wm"><i class="fas fa-print"></i> Imprimir con marca de agua</button>
+        </div>
+      </div>
+
+      <div class="grid" id="grid_pdfs">
+        <div class="card tilt">
+          <h3>AH — Análisis Horizontal (BG)</h3>
+          <div class="actions">
+            <a class="btn" href="docs/ANALISIS HV BG.pdf" download>Descargar</a>
+            <button class="btn" type="button" data-pdf="docs/ANALISIS HV BG.pdf">Imprimir</button>
+          </div>
+        </div>
+        <div class="card tilt">
+          <h3>AH — Análisis Horizontal (ER)</h3>
+          <div class="actions">
+            <a class="btn" href="docs/ANALISIS HV ER.pdf" download>Descargar</a>
+            <button class="btn" type="button" data-pdf="docs/ANALISIS HV ER.pdf">Imprimir</button>
+          </div>
+        </div>
+        <div class="card tilt">
+          <h3>EOAF — Origen y Aplicación (BG)</h3>
+          <div class="actions">
+            <a class="btn" href="docs/EOAF BG.pdf" download>Descargar</a>
+            <button class="btn" type="button" data-pdf="docs/EOAF BG.pdf">Imprimir</button>
+          </div>
+        </div>
+        <div class="card tilt">
+          <h3>Razones Financieras</h3>
+          <div class="actions">
+            <a class="btn" href="docs/RAZONES FINANCIERAS.pdf" download>Descargar</a>
+            <button class="btn" type="button" data-pdf="docs/RAZONES FINANCIERAS.pdf">Imprimir</button>
+          </div>
+        </div>
+        <div class="card tilt">
+          <h3>EFE — Estado de Flujo de Efectivo</h3>
+          <div class="actions">
+            <a class="btn" href="docs/EFE.pdf" download>Descargar</a>
+            <button class="btn" type="button" data-pdf="docs/EFE.pdf">Imprimir</button>
+          </div>
+        </div>
+        <div class="card tilt">
+          <h3>DuPont — Modelo de 3 pasos</h3>
+          <div class="actions">
+            <a class="btn" href="docs/DUPONT.pdf" download>Descargar</a>
+            <button class="btn" type="button" data-pdf="docs/DUPONT.pdf">Imprimir</button>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- SECCIÓN DETALLADA DE PROFORMA -->
+    
+    </section>
+  </main>
+
+  <script>
+    // Navegación y aparición de tarjetas
+    document.addEventListener('DOMContentLoaded', () => {
+      // Scroll al abrir acordeón
+      document.querySelectorAll('#teoria details > summary').forEach(s=>{
+        s.addEventListener('click',()=>{
+          setTimeout(()=>{
+            s.parentElement.scrollIntoView({behavior:'smooth',block:'start'});
+          },200);
+        });
+      });
+
+      // Smooth scroll enlaces #
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        a.addEventListener('click',e=>{
+          const id=a.getAttribute('href');
+          if(!id || id==='#') return;
+          const el=document.querySelector(id);
+          if(!el) return;
+          e.preventDefault();
+          el.scrollIntoView({behavior:'smooth',block:'start'});
+          history.replaceState(null,'',id);
+        });
+      });
+
+      // IntersectionObserver para .tilt
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('reveal');
+            observer.unobserve(entry.target);
+          }
+        });
+      },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+      document.querySelectorAll('.tilt').forEach(el=>observer.observe(el));
+
+      // Progreso simple
+      const prog={p1:40,p2:20,p3:10};
+      ['p1','p2','p3'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.style.width=prog[id]+'%';
+      });
+
+      // Calculadora AH
+      const ahBtn=document.getElementById('cf_ah_calc');
+      if(ahBtn){
+        ahBtn.addEventListener('click',()=>{
+          const t1=parseFloat(document.getElementById('cf_ah_t1').value||'0');
+          const t2=parseFloat(document.getElementById('cf_ah_t2').value||'0');
+          const d=t2-t1;
+          const p=t1!==0?(d/Math.abs(t1))*100:0;
+          document.getElementById('cf_ah_out').textContent=`Δ=${d.toFixed(2)}, %Δ=${p.toFixed(2)}%`;
+        });
+      }
+
+      // Calculadora AV
+      const avBtn=document.getElementById('cf_av_calc');
+      if(avBtn){
+        avBtn.addEventListener('click',()=>{
+          const c=parseFloat(document.getElementById('cf_av_cuenta').value||'0');
+          const b=parseFloat(document.getElementById('cf_av_base').value||'0');
+          const pct=b?(c/b*100):0;
+          document.getElementById('cf_av_out').textContent=b?`Participación=${pct.toFixed(2)}%`:'Base debe ser > 0';
+        });
+      }
+
+      // EOAF dinámica
+      (function(){
+        const tbody=document.querySelector('#cf_eoaf_table tbody');
+        const tot=document.getElementById('cf_eoaf_tot');
+        if(!tbody || !tot) return;
+        let sumOrigen=0,sumAplic=0;
+        const clasificar=(d,tipo)=>{
+          const isActivo=(tipo==='AC'||tipo==='ANC');
+          if(d>0) return isActivo?'Aplicación (↑ Activo)':'Origen (↑ Pasivo/Patrimonio)';
+          if(d<0) return isActivo?'Origen (↓ Activo)':'Aplicación (↓ Pasivo/Patrimonio)';
+          return 'Sin variación';
+        };
+        const actualizar=()=>{tot.textContent=`Origen: ${sumOrigen.toFixed(2)} | Aplicación: ${sumAplic.toFixed(2)}`;};
+        document.getElementById('cf_eoaf_add').addEventListener('click',()=>{
+          const d=parseFloat(document.getElementById('cf_eoaf_delta').value||'0');
+          const tipo=document.getElementById('cf_eoaf_tipo').value;
+          const cls=clasificar(d,tipo);
+          const tr=document.createElement('tr');
+          tr.innerHTML=`<td>${tipo}</td><td>${d.toFixed(2)}</td><td>${cls}</td>`;
+          tbody.appendChild(tr);
+          if(cls.startsWith('Origen')) sumOrigen+=Math.abs(d);
+          else if(cls.startsWith('Aplicación')) sumAplic+=Math.abs(d);
+          actualizar();
+        });
+        document.getElementById('cf_eoaf_clear').addEventListener('click',()=>{
+          tbody.innerHTML=''; sumOrigen=0; sumAplic=0; actualizar();
+        });
+        actualizar();
+      })();
+
+      // Flip cards Razones - Versión mejorada
+      (function(){
+        const host = document.getElementById('ratioGroups'); 
+        if (!host) return;
+        
+        // Datos de las tarjetas
+        const cards = [
+          // LIQUIDEZ
+          {
+            grupo: 'Liquidez', 
+            titulo: 'Razón Corriente', 
+            prom: '1.5 – 2.0', 
+            guia: 'Óptimo entre 1.5 y 2.0; evitar <1', 
+            formula: 'RC = AC / PC', 
+            ejemplo: 'AC = 150,000\nPC = 75,000\nRC = 150,000 / 75,000 = 2.0',
+            interpretacion: 'La empresa tiene $2 en activos corrientes por cada $1 de deuda a corto plazo.'
+          },
+          {
+            grupo: 'Liquidez', 
+            titulo: 'Razón Rápida', 
+            prom: '≥ 1.0', 
+            guia: 'Mínimo recomendable 1.0', 
+            formula: 'RR = (AC − Inventario) / PC', 
+            ejemplo: 'AC = 150,000\nInventario = 40,000\nPC = 100,000\nRR = (150,000 - 40,000) / 100,000 = 1.1',
+            interpretacion: 'La empresa tiene $1.1 en activos líquidos por cada $1 de deuda a corto plazo.'
+          },
+          // ACTIVIDAD
+          {
+            grupo: 'Actividad', 
+            titulo: 'Rotación de Inventarios', 
+            prom: '5 – 10', 
+            guia: 'Mayor es mejor (sin desabasto)', 
+            formula: 'RotInv = Costo de ventas / Inv. prom.', 
+            ejemplo: 'Costo de ventas = 540,000\nInv. prom. = 90,000\nRotInv = 540,000 / 90,000 = 6.0',
+            interpretacion: 'La empresa renueva su inventario 6 veces al año.'
+          },
+          {
+            grupo: 'Actividad', 
+            titulo: 'Rotación de CxC', 
+            prom: '6 – 12', 
+            guia: 'Mayor es mejor', 
+            formula: 'RotCxC = Ventas crédito / CxC prom.', 
+            ejemplo: 'Ventas crédito = 720,000\nCxC prom. = 120,000\nRotCxC = 720,000 / 120,000 = 6.0',
+            interpretacion: 'La empresa cobra sus cuentas por cobrar 6 veces al año.'
+          },
+          {
+            grupo: 'Actividad', 
+            titulo: 'Período Promedio de Cobro', 
+            prom: '30 – 45 días', 
+            guia: 'Menor es mejor', 
+            formula: 'PPC = 360 / RotCxC', 
+            ejemplo: 'RotCxC = 6\nPPC = 360 / 6 = 60 días',
+            interpretacion: 'La empresa tarda en promedio 60 días en cobrar sus cuentas.'
+          },
+          // ENDEUDAMIENTO
+          {
+            grupo: 'Endeudamiento', 
+            titulo: 'Nivel de Endeudamiento', 
+            prom: '0.3 – 0.5', 
+            guia: 'Entre 30% y 50%', 
+            formula: 'Endeudamiento = Pasivo total / Activo total', 
+            ejemplo: 'Pasivo total = 300,000\nActivo total = 600,000\nEndeudamiento = 300,000 / 600,000 = 0.5 (50%)',
+            interpretacion: 'El 50% de los activos de la empresa están financiados con deuda.'
+          },
+          {
+            grupo: 'Endeudamiento', 
+            titulo: 'Apalancamiento', 
+            prom: '0.5 – 1.0', 
+            guia: 'Mayor apalancamiento, mayor riesgo', 
+            formula: 'Apalancamiento = Pasivo total / Patrimonio', 
+            ejemplo: 'Pasivo total = 200,000\nPatrimonio = 250,000\nApalancamiento = 200,000 / 250,000 = 0.8',
+            interpretacion: 'La empresa tiene $0.80 de deuda por cada $1 de patrimonio.'
+          },
+          // RENTABILIDAD
+          {
+            grupo: 'Rentabilidad', 
+            titulo: 'Margen Bruto', 
+            prom: '20% – 40%', 
+            guia: 'Depende del sector', 
+            formula: 'MUB = (Ventas - Costo de ventas) / Ventas', 
+            ejemplo: 'Ventas = 900,000\nCosto de ventas = 540,000\nMUB = (900,000 - 540,000) / 900,000 = 40%',
+            interpretacion: 'La empresa retiene $0.40 de cada $1 de ventas después de cubrir el costo de los bienes vendidos.'
+          },
+          {
+            grupo: 'Rentabilidad', 
+            titulo: 'Margen Neto', 
+            prom: '5% – 10%', 
+            guia: 'Neto después de impuestos', 
+            formula: 'MN = Utilidad Neta / Ventas', 
+            ejemplo: 'Utilidad Neta = 90,000\nVentas = 900,000\nMN = 90,000 / 900,000 = 10%',
+            interpretacion: 'La empresa obtiene $0.10 de utilidad neta por cada $1 de ventas.'
+          },
+          {
+            grupo: 'Rentabilidad', 
+            titulo: 'ROA', 
+            prom: '5% – 10%', 
+            guia: 'Rendimiento sobre activos', 
+            formula: 'ROA = Utilidad Neta / Activo total', 
+            ejemplo: 'Utilidad Neta = 90,000\nActivo total = 900,000\nROA = 90,000 / 900,000 = 10%',
+            interpretacion: 'La empresa genera un retorno del 10% sobre sus activos totales.'
+          }
+        ];
+
+        // Grupos de tarjetas
+        const grupos = ['Liquidez', 'Actividad', 'Endeudamiento', 'Rentabilidad'];
+        const contenedores = new Map();
+        
+        // Crear contenedores para cada grupo
+        grupos.forEach(grupo => {
+          const grupoDiv = document.createElement('div');
+          grupoDiv.className = 'ratio-group';
+          grupoDiv.innerHTML = `<h3 class="ratio-title">${grupo}</h3><div class="ratio-grid" id="grid-${grupo.toLowerCase()}"></div>`;
+          host.appendChild(grupoDiv);
+          contenedores.set(grupo, grupoDiv.querySelector('.ratio-grid'));
+        });
+
+        // Función para crear una tarjeta
+        function crearTarjeta(card) {
+          const tarjeta = document.createElement('div');
+          tarjeta.className = 'ratio-card';
+          tarjeta.tabIndex = 0;
+          
+          tarjeta.innerHTML = `
+            <div class="flip-inner">
+              <div class="face front">
+                <h4>${card.titulo}</h4>
+                <div class="formula">${card.formula}</div>
+                <div class="guia">Promedio: <strong>${card.prom}</strong></div>
+              </div>
+              <div class="face back">
+                <h4>${card.titulo}</h4>
+                <div class="ejemplo">
+                  <div class="mini">Ejemplo:</div>
+                  <div class="formula">${card.ejemplo.replace(/\n/g, '<br>')}</div>
+                </div>
+                <div class="guia">${card.guia}</div>
+                <div class="interpretacion">${card.interpretacion}</div>
+              </div>
+            </div>
+          `;
+
+          // Evento para hacer flip con click
+          tarjeta.addEventListener('click', () => {
+            tarjeta.classList.toggle('is-flipped');
+          });
+
+          // Evento para hacer flip con teclado
+          tarjeta.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              tarjeta.classList.toggle('is-flipped');
+            }
+          });
+
+          return tarjeta;
+        }
+
+        // Agregar tarjetas a sus respectivos contenedores
+        cards.forEach(card => {
+          const contenedor = contenedores.get(card.grupo);
+          if (contenedor) {
+            contenedor.appendChild(crearTarjeta(card));
+          }
+        });
+      })();
+
+      // PDFs
+      (function(){
+        const openPdf=url=>{
+          const w=window.open('','_blank');
+          w.document.write(`<!doctype html><html><head><meta charset='utf-8'><title>FINBOT</title>
+            <style>html,body{height:100%;margin:0} .pdf{width:100%;height:100%}</style>
+          </head><body>
+            <embed class='pdf' src='${url}' type='application/pdf' />
+          </body></html>`);
+          w.document.close(); w.focus(); w.print();
+        };
+        document.querySelectorAll('[data-pdf]').forEach(btn=>{
+          btn.addEventListener('click',()=>openPdf(btn.getAttribute('data-pdf')));
+        });
+        const wmBtn=document.getElementById('pdf_formulas_wm');
+        if(wmBtn){
+          wmBtn.addEventListener('click',()=>{
+            const w=window.open('','_blank');
+            w.document.write(`<!doctype html><html><head><meta charset='utf-8'><title>FINBOT — Fórmulas</title>
+              <style>
+                html,body{height:100%;margin:0}
+                body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+                .wrap{position:relative;height:100vh}
+                .wm{position:fixed;inset:0;pointer-events:none;display:grid;place-items:center;opacity:0.12}
+                .wm span{font-weight:900;font-size:120px;color:#15803d;transform:rotate(-30deg);letter-spacing:6px}
+                .pdf{position:relative;z-index:0;width:100%;height:100%}
+              </style>
+            </head><body>
+              <div class='wrap'>
+                <div class='wm'><span>FINBOT</span></div>
+                <embed class='pdf' src='docs/formulas.pdf' type='application/pdf' />
+              </div>
+            </body></html>`);
+            w.document.close(); w.focus(); w.print();
+          });
+        }
+      })();
+    });
+
+    // Fondo de partículas
+    (function(){
+      const cvs=document.getElementById('stars');
+      if(!cvs) return;
+      const ctx=cvs.getContext('2d');
+      let W=window.innerWidth;
+      let H=window.innerHeight*0.6;
+      cvs.width=W; cvs.height=H;
+      const particles=[];
+      const count=Math.min(120,Math.floor(W/10));
+      for(let i=0;i<count;i++){
+        particles.push({
+          x:Math.random()*W,
+          y:Math.random()*H,
+          vx:(Math.random()-.5)*0.4,
+          vy:(Math.random()-.5)*0.4,
+          r:Math.random()*1.5+0.5,
+          a:Math.random()*0.4+0.2
+        });
+      }
+      function anim(){
+        ctx.clearRect(0,0,W,H);
+        particles.forEach(p=>{
+          p.x+=p.vx; p.y+=p.vy;
+          if(p.x<=0||p.x>=W)p.vx*=-1;
+          if(p.y<=0||p.y>=H)p.vy*=-1;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fillStyle=`rgba(56,189,248,${p.a})`;
+          ctx.fill();
+        });
+        for(let i=0;i<particles.length;i++){
+          for(let j=i+1;j<particles.length;j++){
+            const a=particles[i],b=particles[j];
+            const dx=a.x-b.x,dy=a.y-b.y;
+            const d=Math.sqrt(dx*dx+dy*dy);
+            if(d<100){
+              ctx.beginPath();
+              ctx.strokeStyle=`rgba(148,163,184,${0.15*(1-d/100)})`;
+              ctx.lineWidth=0.3;
+              ctx.moveTo(a.x,a.y);
+              ctx.lineTo(b.x,b.y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(anim);
+      }
+      window.addEventListener('resize',()=>{
+        W=window.innerWidth; H=window.innerHeight*0.6;
+        cvs.width=W; cvs.height=H;
+      });
+      anim();
+    })();
+  </script>
+</body>
+</html>

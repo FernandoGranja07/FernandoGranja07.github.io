@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FINBOT Web – Ante Página</title>
+  <meta name="description" content="FINBOT Web: pre‑landing académico con experiencia tecnológica, storytelling y tarjetas 3D. Proyecto hecho por estudiantes de Ingeniería de Sistemas." />
+  <meta property="og:title" content="FINBOT Web – Ante Página" />
+  <meta property="og:description" content="Experiencia tecnológica con fondo animado, tarjetas 3D y narrativa. Datos. Cálculo. Decisión." />
+  <link rel="icon" href="./assets/logo-finbot-web.png" type="image/png" />
+  <meta property="og:image" content="./assets/logo-finbot-web.png" />
+  <!-- Security policies -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), fullscreen=(), interest-cohort=()" />
+  <style>
+    :root{
+      --bg:#050c16;
+      --bg2:#0A2540;        /* azul academia */
+      --c1:#2EB67D;         /* verde neon tech */
+      --c2:#22d3ee;         /* cian neon opcional para highlights */
+      --gold:#C49A3A;       /* dorado */
+      --text:#E5E7EB;       /* texto principal */
+      --muted:#94A3B8;      /* texto secundario */
+      --card: #0d1f33;      /* fondo tarjetas */
+      --border: rgba(255,255,255,0.12);
+      --shadow: 0 12px 30px rgba(0,0,0,0.35);
+      --radius: 16px;
+      --header-h: 76px;
+      --glow: drop-shadow(0 0 24px rgba(34,211,238,0.35));
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      background:
+        radial-gradient(1400px 800px at 10% -20%, #0e2c4f 0%, transparent 50%),
+        radial-gradient(1200px 800px at 110% -30%, #0b2646 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg2), #081a2b 45%, var(--bg));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      overflow-x:hidden;
+    }
+
+    /* Fondo animado de iconos */
+    .bg-icons{
+      position:fixed; inset:0; z-index:-1; pointer-events:none;
+      opacity:.28;
+      filter: blur(0.2px);
+      mix-blend-mode: screen;
+    }
+    #bg-canvas{position:fixed; inset:0; z-index:-2; display:block}
+    .spotlight{position:fixed; inset:0; pointer-events:none; z-index:-1; background: radial-gradient(400px 400px at 50% 50%, rgba(46,182,125,0.15), rgba(0,0,0,0)); mix-blend-mode: screen}
+    .icon{
+      position:absolute;
+      width:28px; height:28px; opacity:.55;
+      stroke:#9cc7ff; fill:transparent; stroke-width:1.5;
+      transition: opacity .3s ease;
+    }
+    .icon.gold{stroke: #ffd78a}
+    .icon.green{stroke: #97f3c7}
+    .icon.cyan{stroke: #9beeff}
+    @media (prefers-reduced-motion: reduce){
+      .bg-icons{display:none}
+    }
+
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:50; height:var(--header-h);
+      display:flex; align-items:center;
+      backdrop-filter:saturate(140%) blur(10px);
+      background: color-mix(in srgb, var(--bg2) 70%, transparent);
+      border-bottom:1px solid var(--border);
+    }
+    .container{max-width:1200px; margin:0 auto; padding:0 16px;}
+    .row{display:flex; align-items:center; gap:12px;}
+    .between{justify-content:space-between;}
+
+    .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text)}
+    .logo{display:flex; align-items:center}
+    .logo-img{height:46px; width:auto; display:block; filter: var(--glow)}
+    .title-wrap{display:flex; flex-direction:column; line-height:1.1}
+    .site-title{font-weight:900; font-size:19px; margin:0}
+    .site-sub{font-size:12px; color:var(--muted)}
+    nav ul{display:flex; gap:16px; list-style:none; margin:0; padding:0; flex-wrap:wrap; justify-content:flex-end}
+    nav a{
+      color:var(--text); text-decoration:none; font-size:14px;
+      padding:10px 12px; border-radius:10px; border:1px solid transparent;
+      transition:.2s ease; position:relative; text-transform:uppercase; font-weight:600;
+    }
+    nav a::after{
+      content:''; position:absolute; left:10px; right:10px; bottom:6px; height:2px;
+      background:linear-gradient(90deg, var(--c1), var(--c2)); opacity:0; transform:scaleX(0); transform-origin:left; transition:.2s ease;
+    }
+    nav a:hover::after, nav a:focus::after{opacity:1; transform:scaleX(1)}
+    nav a:hover{border-color:var(--border)}
+    nav a:focus{outline:2px solid var(--c1); outline-offset:2px; border-radius:10px}
+
+    /* Hero */
+    .hero{padding:56px 16px 24px; position:relative}
+    .grid{display:grid; gap:28px; grid-template-columns: repeat(12, 1fr);}
+    .hero-left{grid-column: span 7}
+    .hero-right{grid-column: span 5; display:grid; place-items:center}
+    h1{
+      margin:0 0 10px; font-size:52px; font-weight:1000; letter-spacing:.4px;
+      background: linear-gradient(90deg, #fff, #b6dcff 40%, #88f0ff);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      filter: var(--glow);
+    }
+    .sub{color:var(--muted); font-size:16px; margin-bottom:10px}
+    .lema{color:var(--gold); font-weight:800; margin-bottom:18px; text-shadow:0 0 12px rgba(196,154,58,0.25)}
+    .btns{display:flex; gap:12px; flex-wrap:wrap}
+    .btn{
+      appearance:none; border:1px solid var(--border); background:transparent;
+      color:var(--text); padding:10px 14px; border-radius:12px; cursor:pointer;
+      transition:.15s ease; font-weight:700;
+    }
+    .btn:hover{border-color:var(--c1); color:var(--c1)}
+    .btn.primary{
+      background: linear-gradient(180deg, #176a4a, #11533a);
+      border-color:#1d6b4d; color:#ecfff7; box-shadow:0 10px 22px rgba(0,0,0,0.35);
+      animation: pulse 2.2s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%,100%{transform:translateZ(0) scale(1)}
+      50%{transform:translateZ(0) scale(1.03)}
+    }
+    .disc{
+      width:min(520px, 80vw); aspect-ratio:auto; border-radius:16px;
+      display:grid; place-items:center; text-align:center;
+      background: transparent;
+      border:none; box-shadow:none; position:relative; overflow:hidden;
+    }
+    .disc::after{content:none}
+    .hero-logo{max-width:100%; height:auto; display:block; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35))}
+    @keyframes sweep{0%{transform:none}100%{transform:none}}
+    .disc span{display:none}
+
+    /* CTA card */
+    .cta-strip{padding:26px 16px 10px}
+    .cta-card{
+      max-width:1100px; margin:0 auto; padding:20px;
+      background: linear-gradient(180deg, rgba(14,28,47,0.95), rgba(8,20,34,0.95));
+      border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);
+      display:grid; place-items:center; text-align:center;
+    }
+    .cta-btn{
+      display:inline-block; margin-top:8px;
+      background: linear-gradient(180deg, #1d6b4d, #175a40);
+      border:1px solid #21845f; color:#eafff7; text-decoration:none;
+      padding:12px 18px; border-radius:12px; font-weight:900; letter-spacing:.3px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+      transition:.15s ease;
+    }
+    .cta-btn:hover{filter:brightness(1.06)}
+    .cta-btn:focus{outline:2px solid var(--c1); outline-offset:3px}
+
+    /* Secciones como grupos de tarjetas */
+    main{padding:18px}
+    .group{
+      max-width:1200px; margin:28px auto 0; padding:0 8px;
+    }
+    .group-title{margin:0 0 12px; color:#bfe9ff; font-weight:900; letter-spacing:.3px; filter:var(--glow)}
+    .toolbar{max-width:1200px; margin:10px auto 0; padding:0 8px 6px; display:flex; justify-content:flex-end; gap:8px}
+    .toolbar .btn{border-color:var(--border)}
+    .cards{
+      display:grid; gap:18px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9));
+      border:1px solid var(--border); border-radius:18px; box-shadow: var(--shadow);
+      perspective:1000px; transform-style:preserve-3d;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, height .35s ease;
+      position:relative; overflow:hidden;
+    }
+    .card:hover{border-color: color-mix(in srgb, var(--c2) 50%, #fff 0%); box-shadow: 0 14px 36px rgba(0,0,0,0.45)}
+    .card-inner{position:relative; transform-style:preserve-3d; transition: transform .45s cubic-bezier(.2,.8,.2,1)}
+    .card.flipped .card-inner{transform: rotateY(180deg)}
+    .card-face{
+      position:absolute; inset:0; padding:18px; display:flex; flex-direction:column; justify-content:center; gap:10px;
+      backface-visibility:hidden; border-radius:18px; height:100%;
+      background: linear-gradient(180deg, rgba(10,24,39,0.92), rgba(8,22,37,0.92));
+    }
+    .front .heading{font-weight:900}
+    .front .syn{color:var(--muted); font-size:14px}
+    .badge{
+      display:inline-block; padding:3px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:#b2c7ff
+    }
+    .back{transform: rotateY(180deg)}
+    .back p{margin:0; line-height:1.65; color:#eaf2ff; font-size:15px;}
+    .hint{color:var(--muted); font-size:12px}
+
+    /* Accesibilidad y foco */
+    .card[tabindex]{outline:none}
+    .card:focus-within, .card:focus{box-shadow:0 0 0 2px var(--c1); border-color:var(--c1)}
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      .card, .card-inner{transition:none}
+      .btn.primary{animation:none}
+    }
+
+    /* Storytelling (scrollytelling) */
+    .story{padding:40px 0 20px}
+    .story .wrap{max-width:1100px; margin:0 auto; padding:0 12px}
+    .story-rail{position:relative; display:grid; grid-template-columns: 420px 1fr; gap:24px; min-height:70vh}
+    .story-sticky{position:relative; top:auto; align-self:start; padding:18px; border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9)); box-shadow:var(--shadow)}
+    .story-sticky h3{margin:0 0 6px}
+    .story-progress{height:6px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; margin-top:10px}
+    .story-progress span{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--c1), var(--c2)); transition:width .35s ease}
+    .story-controls{display:flex; gap:8px; margin-top:10px}
+    .story-controls .btn{padding:6px 10px; border-radius:10px}
+    .cta-pulse{animation: pulse 1.6s infinite ease-in-out}
+    /* Mini demo escena 3 */
+    .mini-demo{margin-top:10px; display:grid; grid-template-columns: repeat(3, 1fr); gap:10px}
+    .mini-demo .panel{border:1px solid var(--border); border-radius:12px; padding:10px; background:rgba(255,255,255,0.03)}
+    .mini-demo .panel h5{margin:0 0 6px; font-size:14px}
+    .progress{height:6px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; margin-top:6px}
+    .progress span{display:block; height:100%; width:0; background:linear-gradient(90deg, var(--c2), var(--c1)); transition:width .6s ease}
+    .story-steps{display:flex; flex-direction:column; gap:20px}
+    .step{padding:18px; border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(12,28,47,0.85), rgba(9,23,39,0.85)); opacity:.35; transform:translateY(20px); transition:opacity .35s ease, transform .35s ease}
+    .step h4{margin:0 0 6px}
+    .step .meta{color:#b2c7ff; font-size:12px}
+    .step.active{opacity:1; transform:none}
+    .kpis{display:flex; gap:16px; flex-wrap:wrap; margin-top:8px}
+    .kpi{min-width:120px; padding:10px 12px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,0.02)}
+    .kpi strong{font-size:22px; display:block}
+    @media (max-width: 980px){
+      .story-rail{grid-template-columns: 1fr}
+      .story-sticky{position:relative; top:auto}
+    }
+
+    /* Pilares / Carrusel */
+    .pillars{padding:24px 0 6px}
+    .pillars .wrap{max-width:1100px; margin:0 auto; padding:0 12px}
+    .carousel{position:relative; overflow:hidden; border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9)); box-shadow:var(--shadow)}
+    .track{display:flex; scroll-snap-type:x mandatory; overflow-x:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; -ms-overflow-style:none}
+    .track::-webkit-scrollbar{display:none}
+    .slide{min-width:100%; padding:22px; scroll-snap-align:start; display:grid; gap:8px}
+    .slide h4{margin:0; font-weight:900}
+    .slide p{margin:0; color:#d9e9ff}
+    .dots{display:flex; gap:6px; justify-content:center; padding:10px}
+    .dot{width:8px; height:8px; border-radius:999px; background:rgba(255,255,255,0.24); border:1px solid var(--border);}
+    .dot.active{background:linear-gradient(90deg, var(--c1), var(--c2))}
+    .ctrl{position:absolute; inset:auto 10px 10px auto; display:flex; gap:8px}
+    .ctrl button{appearance:none; border:1px solid var(--border); background:rgba(255,255,255,0.04); color:var(--text); padding:6px 10px; border-radius:10px; cursor:pointer}
+    .pillars .cta-mini{margin-top:10px; display:flex; gap:10px; flex-wrap:wrap}
+    .pillars .cta-mini a{border:1px solid var(--border); border-radius:10px; padding:8px 12px; text-decoration:none; color:var(--text)}
+    @media (max-width:720px){.slide{padding:16px}}
+
+    .history-panel{max-width:1100px; margin:12px auto 0; display:grid; grid-template-columns: 1.1fr 1.4fr; gap:18px; align-items:stretch}
+    .history-media, .history-text{border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9)); box-shadow:var(--shadow)}
+    /*.history-media{display:grid; place-items:center; padding:10px; min-height:280px}*/
+    .history-media{display:grid; place-items:center; padding:10px; min-height:340px; position:relative}
+    .history-media img{width:100%; height:100%; object-fit:cover; display:block; border-radius:12px}
+
+
+    .history-media .ph{width:100%; height:100%; border-radius:12px; background:radial-gradient(120% 100% at 10% 10%, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border:1px dashed rgba(255,255,255,0.15)}
+    .history-media img{max-width:100%; height:auto; display:block; border-radius:12px}
+    .history-text{padding:18px; line-height:1.7}
+    .history-text h4{margin:0 0 8px; font-weight:900}
+    @media (max-width:900px){.history-panel{grid-template-columns:1fr}}
+
+    /* Secciones: Filosofía y Objetivos (tema existente) */
+    .warm-section{background:transparent; padding:40px 0; margin-top:22px}
+    .warm-section .wrap{max-width:1100px; margin:0 auto; padding:0 16px}
+    .warm-title{margin:0 0 22px; text-align:center; font-weight:1000; font-size:36px; color:var(--gold); letter-spacing:.3px; filter:var(--glow)}
+    .filo-grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap:24px; align-items:stretch}
+    .filo-card{border:1px solid var(--border); border-radius:16px; padding:20px; background:linear-gradient(180deg, rgba(13,31,51,0.92), rgba(8,22,37,0.92)); box-shadow:var(--shadow); min-height:210px}
+    .filo-card h4{margin:-20px -20px 14px; padding:12px 16px; color:#eaf2ff; font-weight:900; font-size:18px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02); border-radius:16px 16px 0 0}
+    .filo-card p{margin:0; line-height:1.75; color:#d9e9ff; font-size:15.5px}
+    .filo-list{margin:0; padding-left:20px; line-height:1.75; color:var(--text); font-size:15.5px}
+    .filo-list strong{color:var(--gold)}
+    @media (max-width:900px){.filo-grid{grid-template-columns:1fr}}
+
+    .obj-wrap{max-width:950px; margin:0 auto; padding:0 16px}
+    .obj-list{list-style:none; margin:0; padding:0; display:grid; gap:18px}
+    .obj-list li{position:relative; padding:14px 6px; text-align:center; color:var(--text); font-size:18px}
+    .obj-list li+li{border-top:1px solid var(--border)}
+
+    /* Bloque datos empresa (tema existente) */
+    .company-info{background:transparent; padding:18px 12px}
+    .company-info .wrap{max-width:1100px; margin:0 auto; padding:0 12px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9)); box-shadow:var(--shadow)}
+    .company-info a{color:var(--c1); text-decoration:none}
+
+    /* Conócenos */
+    .team{padding:26px 12px}
+    .team .wrap{max-width:1100px; margin:0 auto}
+    .team h3{margin:0 0 14px; text-align:center; font-weight:1000; letter-spacing:.3px; filter:var(--glow)}
+    .team-grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px}
+    .team-card{border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9)); box-shadow:var(--shadow); padding:14px; text-align:center}
+    .team-photo{width:100%; aspect-ratio:3/4; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:rgba(255,255,255,0.04); display:block}
+    .team-photo img{width:100%; height:100%; object-fit:cover; display:block}
+    .team-name{margin:10px 0 2px; font-weight:900; color:#eaf2ff}
+    .team-role{color:#b2c7ff; font-size:12px; letter-spacing:.3px}
+    .team-quote{margin-top:6px; color:#d9e9ff; font-style:italic}
+
+    /* Comentarios de clientes */
+    .feedback{padding:26px 12px}
+    .feedback .wrap{max-width:1100px; margin:0 auto}
+    .feedback h3{margin:0 0 12px; text-align:center; font-weight:1000; letter-spacing:.3px}
+    .fb-grid{display:grid; grid-template-columns: 1.1fr 1fr; gap:16px}
+    .fb-card{border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9)); box-shadow:var(--shadow); padding:16px}
+    .fb-form label{display:block; font-weight:700; margin:10px 0 6px}
+    .fb-form input, .fb-form textarea, .fb-form select{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--text)}
+    .fb-form textarea{min-height:120px; resize:vertical}
+    .fb-form .actions{margin-top:12px; display:flex; justify-content:flex-end}
+    .fb-form button{appearance:none; border:1px solid var(--border); background:linear-gradient(180deg, #176a4a, #11533a); color:#ecfff7; padding:10px 14px; border-radius:12px; font-weight:900; cursor:pointer}
+    .reviews{display:grid; gap:10px}
+    .review{border:1px solid var(--border); border-radius:14px; padding:12px; background:rgba(255,255,255,0.03)}
+    .review .meta{color:#b2c7ff; font-size:12px}
+    @media (max-width:980px){.fb-grid{grid-template-columns:1fr}}
+
+    /* Banda de Título y Panel largo */
+    .title-band{max-width:1100px; margin:20px auto 0; padding:24px 12px 6px; text-align:center}
+    .title-band .orb{display:none}
+    .orb-logo{width:min(260px, 70vw); height:auto; display:block; margin:0 auto 14px; filter: var(--glow) drop-shadow(0 8px 24px rgba(0,0,0,0.35))}
+    .title-band h2{margin:0; font-size:40px; font-weight:1000; letter-spacing:.3px}
+    .title-band .sub{color:#bfe9ff; margin-top:4px}
+    .title-band .quote{margin-top:8px; color:#e7f7ff; font-style:italic}
+    .panel-long{max-width:1100px; margin:12px auto 0; padding:18px; border:1px solid var(--border); border-radius:16px; background:linear-gradient(180deg, rgba(13,31,51,0.9), rgba(8,22,37,0.9)); box-shadow:var(--shadow); line-height:1.7}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-left{grid-column: 1/-1}
+      .hero-right{grid-column: 1/-1}
+      h1{font-size:44px}
+    }
+    @media (max-width: 720px){
+      .header{height:auto; padding:10px 0}
+      nav ul{gap:6px}
+      h1{font-size:36px}
+    }
+  </style>
+  <!-- Verificación de autenticación eliminada -->
+</head>
+<body>
+  <!-- Fondo de iconos -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <svg class="bg-icons" viewBox="0 0 100 100" aria-hidden="true"></svg>
+  <svg class="bg-icons" viewBox="0 0 100 100" aria-hidden="true"></svg>
+
+  <header class="header" role="banner" aria-label="Barra de navegacion principal">
+    <div class="container row between">
+      <a class="brand" href="#top" aria-label="Inicio FINBOT Web">
+        <div class="logo"><img class="logo-img" src="./assets/logo-finbot-web.png" alt="FINBOT Web" /></div>
+        <div class="title-wrap">
+          <strong class="site-title">FINBOT Web</strong>
+          <span class="site-sub">NICARAGUA · UNI RUSB 2025</span>
+        </div>
+      </a>
+      <nav role="navigation" aria-label="Secciones del sitio">
+        <ul>
+          <li><a href="#cta">FINBOT</a></li>
+          <li><a href="aprende.html">APRENDIZAJE</a></li>
+          <li><a href="aprende-diferente.html">APRENDE DIFERENTE</a></li>
+          <li><a href="#grupo-historia">QUIENES SOMOS</a></li>
+          <li><a href="#grupo-filosofia">FILOSOFIA FINBOT</a></li>
+          <li><a href="#grupo-objetivos">OBJETIVOS FINBOT</a></li>
+          <li><a href="#conocenos">CONÓCENOS</a></li>
+          <li><a href="#comentarios">COMENTA</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <a id="top" style="position:absolute; inset:0 auto auto 0; width:0; height:0;" aria-hidden="true"></a>
+
+  <section class="hero container" role="region" aria-label="Portada FINBOT Web">
+    <div class="grid">
+      <div class="hero-left">
+        <h1>FINBOT Web</h1>
+        <div class="sub">Proyecto académico hecho por estudiantes de Ingeniería de Sistemas.</div>
+        <div class="lema">FINBOT Web — Datos. Cálculo. Decisión.</div>
+        <div class="btns">
+          <a class="btn primary" href="app.html" aria-label="Ir a la App">Ir a la App</a>
+          <a class="btn" href="#grupo-historia" aria-label="Conoce nuestra historia">Conoce nuestra historia</a>
+          <a class="btn" href="./aprende.html" aria-label="Abrir portal educativo">Aprende con FINBOT</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="disc" aria-label="FINBOT Web logo">
+          <img class="hero-logo" src="./assets/logo-finbot-web.png" alt="FINBOT Web" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" class="cta-strip" aria-label="Franja de llamada a la acción">
+    <div class="cta-card">
+      <a class="cta-btn" href="app.html">INICIAR CON FINBOT</a>
+      <a class="cta-btn" href="./aprende.html" aria-label="Abrir portal educativo">APRENDE CON FINBOT – PORTAL EDUCATIVO</a>
+      <a class="cta-btn" href="./aprende-diferente.html" aria-label="Abrir juegos Aprende Diferente">APRENDE DIFERENTE – JUEGOS</a>
+    </div>
+  </section>
+
+  <!-- Storytelling interactivo -->
+  <section id="story" class="story" aria-label="Historia e impacto FINBOT Web">
+    <div class="wrap story-rail">
+      <div class="story-sticky" aria-live="polite">
+        <h3>FINBOT Web en 4 escenas</h3>
+        <div class="syn">Desliza o usa ← → para avanzar la historia.</div>
+        <div class="story-progress" aria-hidden="true"><span id="storyBar"></span></div>
+        <div class="story-controls" aria-hidden="false">
+          <button id="prevStep" class="btn" aria-label="Escena anterior">Anterior</button>
+          <button id="nextStep" class="btn primary" aria-label="Siguiente escena">Siguiente</button>
+          <button id="skipStory" class="btn" aria-label="Omitir historia">Omitir</button>
+        </div>
+      </div>
+      <div class="story-steps">
+        <article class="step" data-step="1">
+          <h4>1) El Problema</h4>
+          <div class="meta">Cálculos dispersos, formatos inconsistentes y poco tiempo para interpretar.</div>
+          <p>La clase se llena de números y se pierde lo importante: el criterio. Necesitábamos una base común y confiable.</p>
+        </article>
+        <article class="step" data-step="2">
+          <h4>2) Nacemos en la UNI</h4>
+          <div class="meta">2025 · Ingeniería de Sistemas</div>
+          <p>Construimos una app 100% web y local, sin cuentas. Estandariza AH/AV, razones, CNT/CNO, EOAF y valoración simple.</p>
+        </article>
+        <article class="step" data-step="3">
+          <h4>3) Cómo funciona</h4>
+          <p>Todo‑en‑uno: captura, cálculo e interpretación. Privacidad por diseño y lenguaje pedagógico contextualizado.</p>
+          <div class="mini-demo" aria-label="Mini demo de flujo">
+            <div class="panel" data-panel="captura">
+              <h5>Captura</h5>
+              <p style="margin:0">Cuentas por periodo</p>
+              <div class="progress"><span></span></div>
+            </div>
+            <div class="panel" data-panel="calculo">
+              <h5>Cálculo</h5>
+              <p style="margin:0">AH / AV · Razones · CNT / CNO · EOAF</p>
+              <div class="progress"><span></span></div>
+            </div>
+            <div class="panel" data-panel="interpretacion">
+              <h5>Interpretación</h5>
+              <p style="margin:0">Insights y límites de método</p>
+              <div class="progress"><span></span></div>
+            </div>
+          </div>
+          <div class="kpis" aria-label="Indicadores de eficiencia">
+            <div class="kpi"><strong data-count="45">0</strong><span>min ahorrados</span></div>
+            <div class="kpi"><strong data-count="-70">0</strong><span>% errores</span></div>
+            <div class="kpi"><strong data-count="2">0</strong><span>docentes piloto</span></div>
+            <div class="kpi"><strong data-count="60">0</strong><span>NPS</span></div>
+          </div>
+        </article>
+        <article class="step" data-step="4">
+          <h4>4) Impacto y rumbo</h4>
+          <p>Adopción sostenida, biblioteca de casos y rúbricas. Mejora continua guiada por datos y comunidad.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares FINBOT: carrusel -->
+  <section id="pillars" class="pillars" aria-label="Pilares FINBOT Web">
+    <div class="wrap">
+      <h3 class="group-title">Pilares FINBOT</h3>
+      <div class="carousel" aria-roledescription="carousel">
+        <div class="track" id="pillarsTrack" tabindex="0" aria-live="polite">
+          <article class="slide" aria-label="Problema que resolvemos">
+            <h4>Problema que resolvemos</h4>
+            <p>Estudiantes: menos errores y más tiempo para interpretar. Docentes: entregables estandarizados y revisión ágil. Cohortes: curva menor y materiales que perduran.</p>
+          </article>
+          <article class="slide" aria-label="Propuesta de Valor">
+            <h4>Propuesta de Valor</h4>
+            <p>Todo‑en‑uno local: captura, cálculo e interpretación sin internet ni registros. Estandariza procesos, promueve criterio y devuelve tiempo para el porqué.</p>
+          </article>
+          <article class="slide" aria-label="Misión">
+            <h4>Misión</h4>
+            <p>Herramienta abierta y rigurosa para la UNI: estandariza cálculos, impulsa la interpretación y eleva la calidad con criterios comparables.</p>
+          </article>
+          <article class="slide" aria-label="Valores">
+            <h4>Valores</h4>
+            <p>Claridad y rigor verificable. Accesibilidad sin conexión ni cuentas. Colaboración real. Privacidad por diseño. Orgullo UNI.</p>
+          </article>
+          <article class="slide" aria-label="Visión 2028">
+            <h4>Visión 2028</h4>
+            <p>Ser la referencia académica estudiantil en Nicaragua, integrados a cursos clave y con una biblioteca de casos que guíe a nuevas cohortes.</p>
+          </article>
+          <article class="slide" aria-label="Diferenciadores">
+            <h4>Diferenciadores</h4>
+            <p>Privacidad local, cobertura completa del flujo académico, lenguaje pedagógico contextualizado y desarrollo estudiantil aplicado a docencia real.</p>
+          </article>
+          <article class="slide" aria-label="Indicadores de Éxito">
+            <h4>Indicadores de Éxito</h4>
+            <p>Adopción (cursos/grupos/entregas), calidad (errores), eficiencia (minutos ahorrados) y satisfacción (NPS).</p>
+          </article>
+          <article class="slide" aria-label="Política de Datos y Ética">
+            <h4>Política de Datos y Ética</h4>
+            <p>Sin cuentas ni nube: todo en el navegador. Exportación voluntaria. Interpretación heurística local. Transparencia en fórmulas y avisos (p. ej., DCF requiere r&gt;g y UN&gt;0).</p>
+          </article>
+        </div>
+        <div class="ctrl" aria-hidden="true">
+          <button id="prevSlide" aria-label="Anterior">◄</button>
+          <button id="nextSlide" aria-label="Siguiente">►</button>
+        </div>
+        <div class="dots" id="dots" role="tablist" aria-label="Paginación"></div>
+      </div>
+      <div class="cta-mini">
+        <a href="#main-cards">Ver tarjetas detalladas</a>
+        <a href="#cta">Probar FINBOT</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="spotlight" aria-hidden="true"></div>
+  <main id="main-cards">
+    <div class="toolbar" role="region" aria-label="Controles de visualización">
+      <button id="toggleDetalle" class="btn" style="font-weight:700">Ver textos completos</button>
+      <button id="toggleIntensidad" class="btn" aria-pressed="false">Intensidad: Alta</button>
+    </div>
+    <!-- Banda de Identidad -->
+    <section id="identidad" class="title-band" aria-label="Identidad FINBOT">
+      <img class="orb-logo" src="./assets/logo-finbot-web.png" alt="FINBOT Web" />
+      <h2>FINBOT Web</h2>
+      <div class="sub">NICARAGUA · UNI RUSB 2025</div>
+      <div class="quote">"Datos. Cálculo. Decisión."</div>
+    </section>
+
+    <!-- Grupo: Historia -->
+    <div id="grupo-historia" class="group">
+      <h3 class="group-title">Quiénes Somos — Nuestra Historia</h3>
+      <div class="history-panel">
+        <div class="history-media">
+          <div class="ph" aria-hidden="true"></div>
+          <!-- <img id="historiaImg" src="assets/historiaImg.png" alt="Imagen de nuestra historia" /> -->
+          <img id="historiaImg"
+          src="assets/historiaImg.jpg"
+          alt="Imagen de nuestra historia"
+          onload="this.previousElementSibling&&(this.previousElementSibling.style.display='none')" />
+        </div>
+        <div class="history-text">
+          <h4>Nuestra Historia</h4> 
+          <p>Nacimos en 2025 en la UNI para resolver cálculos dispersos y poco tiempo para interpretar. Creamos una app 100% web y local (sin cuentas) que captura datos por periodos y calcula Analisis Horizontal y Vertical, razones financieras, Capital Neto de Trabajo y Capital Neto de Trabajo Operativo, EOAF y una valoración e interpretación simple. Estandariza el cálculo, libera tiempo y enfoca en pensamiento crítico para estudiantes y docentes.</p>
+        </div>
+      </div>
+    </div>
+
+<!-- Grupo: Propuesta de Valor como panel largo -->
+    <div id="grupo-propuesta" class="group">
+      <h3 class="group-title">Propuesta de Valor</h3>
+      <div class="panel-long" role="region" aria-label="Propuesta de Valor – texto">
+        Experiencia todo‑en‑uno local: captura, cálculo e interpretación sin internet ni registros. Estandariza el proceso entre grupos, promueve aprendizaje con criterio y devuelve tiempo para enfocarse en el porqué financiero. Nuestra misión es facilitar el aprendizaje y la enseñanza con una herramienta abierta y rigurosa que impulsa la interpretación y eleva la calidad con criterios comparables. Estudiantes ganan tiempo para interpretar; docentes reciben entregables estandarizados y revisión ágil; y las futuras cohortes heredan materiales que perduran con una curva más corta.
+      </div>
+    </div>
+
+    <!-- Nuestra Filosofía (Misión, Visión, Valores) -->
+    <section id="grupo-filosofia" class="warm-section" aria-label="Nuestra Filosofía">
+      <div class="wrap">
+        <h3 class="warm-title">Nuestra Filosofía</h3>
+        <div class="filo-grid">
+          <article class="filo-card" aria-label="Misión">
+            <h4>Misión</h4>
+            <p>Ofrecer a nuestra comunidad una experiencia académica clara, rigurosa y accesible, que conecte cálculo con criterio y eleve la calidad del aprendizaje.</p>
+          </article>
+          <article class="filo-card" aria-label="Visión">
+            <h4>Visión</h4>
+            <p>Ser reconocidos como referencia estudiantil de análisis financiero en Nicaragua, con materiales que perduran y una cultura de evidencia.</p>
+          </article>
+          <article class="filo-card" aria-label="Valores">
+            <h4>Valores</h4>
+            <ul class="filo-list">
+              <li><strong>Claridad:</strong> lenguaje pedagógico y transparente.</li>
+              <li><strong>Rigor:</strong> fórmulas verificables y límites explícitos.</li>
+              <li><strong>Privacidad:</strong> todo local, sin cuentas ni nube.</li>
+              <li><strong>Colaboración:</strong> mejora continua con retroalimentación real.</li>
+              <li><strong>Orgullo UNI:</strong> desarrollo hecho por estudiantes.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grupo: Diferenciadores y Valores como panel largo -->
+    <div id="grupo-diferenciadores" class="group">
+      <h3 class="group-title">Diferenciadores y Valores</h3>
+      <div class="panel-long" role="region" aria-label="Diferenciadores y Valores – texto">
+        Privacidad por diseño: los datos permanecen en el dispositivo del usuario. Cobertura completa del flujo académico, desde la captura hasta el reporte interpretado. Lenguaje pedagógico contextualizado a la realidad nicaragüense y desarrollo hecho por estudiantes aplicado a docencia real. Nuestros valores: claridad y rigor verificable; accesibilidad sin conexión ni cuentas; colaboración con retroalimentación real; y orgullo UNI al servicio del aprendizaje.
+      </div>
+    </div>
+
+    <!-- Grupo: Objetivos y Visión -->
+    <div id="grupo-objetivos" class="group">
+      <h3 class="group-title">Nuestros Objetivos</h3>
+    </div>
+    <section class="warm-section" aria-label="Nuestros Objetivos – lista">
+      <div class="obj-wrap">
+        <h3 class="warm-title" style="margin-bottom:10px">Nuestros Objetivos</h3>
+        <ul class="obj-list">
+          <li>Posicionar FINBOT Web como herramienta académica reconocida por su claridad y calidad.</li>
+          <li>Impulsar el uso en múltiples grupos por semestre, fortaleciendo la comunidad docente‑estudiantil.</li>
+          <li>Crear un entorno cálido y moderno que promueva la interpretación y la cultura de evidencia.</li>
+          <li>Lograr sostenibilidad con mejoras continuas y métricas de adopción, calidad y satisfacción.</li>
+          <li>Expandir la experiencia con biblioteca de casos, rúbricas y módulos opcionales.</li>
+        </ul>
+      </div>
+    </section>
+
+
+    <!-- Grupo: Indicadores y Manifiesto -->
+    <div id="grupo-indicadores" class="group">
+      <h3 class="group-title">Indicadores y Manifiesto</h3>
+      <div class="filo-grid" role="region" aria-label="Indicadores y Manifiesto – tarjetas">
+        <article class="filo-card" aria-label="Indicadores">
+          <h4>Indicadores</h4>
+          <ul class="filo-list">
+            <li><strong>Adopción:</strong> cursos, grupos y entregas.</li>
+            <li><strong>Calidad:</strong> porcentaje de ejercicios sin errores.</li>
+            <li><strong>Eficiencia:</strong> minutos ahorrados en prácticas.</li>
+            <li><strong>Satisfacción:</strong> NPS de estudiantes y docentes.</li>
+          </ul>
+        </article>
+        <article class="filo-card" aria-label="Manifiesto">
+          <h4>Manifiesto</h4>
+          <p>Aprender finanzas no debe ser una barrera. La tecnología ilumina el criterio, no lo reemplaza. FINBOT Web busca dejar cada clase mejor: con cálculos confiables, interpretaciones transparentes y decisiones bien fundamentadas.</p>
+        </article>
+      </div>
+    </div>
+
+
+    <!-- Grupo: Legado y Política -->
+    <div id="grupo-legado" class="group">
+      <h3 class="group-title">Legado y Política de Datos</h3>
+      <div class="filo-grid" role="region" aria-label="Legado y Política de Datos – tarjetas">
+        <article class="filo-card" aria-label="Legado">
+          <h4>Legado</h4>
+          <p>Estándar abierto para ejercicios y proyectos en la UNI, biblioteca de casos para reducir curva de aprendizaje y cultura de evidencia con límites claros.</p>
+        </article>
+        <article class="filo-card" aria-label="Política de Datos">
+          <h4>Política de Datos</h4>
+          <ul class="filo-list">
+            <li><strong>Sin cuentas:</strong> todo sucede localmente en el navegador.</li>
+            <li><strong>Exportación voluntaria:</strong> control del usuario.</li>
+            <li><strong>Interpretación local:</strong> heurísticas sin servicios externos.</li>
+            <li><strong>Transparencia:</strong> fórmulas y avisos sobre límites del método.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+
+
+  </main>
+
+  <!-- Conócenos -->
+  <section id="conocenos" class="team" aria-label="Conócenos">
+    <div class="wrap">
+      <h3 class="group-title" style="text-align:center">Conócenos</h3>
+      <div class="team-grid" role="list">
+        <article class="team-card" role="listitem">
+          <div class="team-photo"><img src="assets/team-1.jpg" alt="Foto de Alejandra Nazareth Tinoco Arauz" onerror="this.src='assets/logo-finbot-web.png'" /></div>
+          <div class="team-name">Br. Alejandra Nazareth Tinoco Arauz</div>
+          <div class="team-role">Estudiante · Diseñador UI/UX</div>
+          <div class="team-quote">“Si carga lento, el ROI se va corriendo.”</div>
+        </article>
+        <article class="team-card" role="listitem">
+          <div class="team-photo"><img src="assets/team-2.jpg" alt="Foto de Fernando Miguel Granja Rodríguez" onerror="this.src='assets/logo-finbot-web.png'" /></div>
+          <div class="team-name">Br. Fernando Miguel Granja Rodríguez</div>
+          <div class="team-role">Estudiante · Desarrollador Front‑End</div>
+          <div class="team-quote">“Ese bug no es mío, es del tipo de cambio.”</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comentarios de clientes -->
+  <section id="comentarios" class="feedback" aria-label="Comentarios de clientes">
+    <div class="wrap">
+      <h3 class="group-title" style="text-align:center">Comentarios de clientes</h3>
+      <div class="fb-grid">
+        <div class="fb-card">
+          <form id="fbForm" class="fb-form" novalidate>
+            <label for="fbNombre">Nombre</label>
+            <input id="fbNombre" name="nombre" type="text" placeholder="Tu nombre" required />
+
+            <label for="fbCorreo">Correo (opcional)</label>
+            <input id="fbCorreo" name="correo" type="email" placeholder="tucorreo@ejemplo.com" />
+
+            <label for="fbComentario">Comentario</label>
+            <textarea id="fbComentario" name="comentario" placeholder="Escribe tu experiencia..."></textarea>
+
+            <label for="fbRate">Calificación</label>
+            <select id="fbRate" name="rate">
+              <option value="5">★★★★★ (5)</option>
+              <option value="4">★★★★☆ (4)</option>
+              <option value="3">★★★☆☆ (3)</option>
+              <option value="2">★★☆☆☆ (2)</option>
+              <option value="1">★☆☆☆☆ (1)</option>
+            </select>
+            <div class="actions"><button type="submit">Publicar</button></div>
+          </form>
+        </div>
+        <div class="fb-card">
+          <div id="reviews" class="reviews" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="company-info" aria-label="Datos de la empresa">
+    <div class="wrap">
+      <strong style="filter:var(--glow)">FINBOT Web</strong>
+      <span>© 2025 · Nicaragua</span>
+      <span><a href="#">Términos</a> · <a href="#">Privacidad</a></span>
+      <a href="mailto:contacto@finbotweb.com">contacto@finbotweb.com</a>
+    </div>
+  </section>
+
+  <footer role="contentinfo" class="container" style="color:var(--muted); text-align:center; padding:28px 16px 40px;">
+    © 2025 FINBOT · NICARAGUA · UNI RUSB
+  </footer>
+
+  <script>
+    // Prefiere movimientos reducidos
+    const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let FX_INTENSITY = 1; // 1=alta, 0.6=media, 0.3=baja
+
+    // 0) Red de partículas en canvas (líneas/monedas) + spotlight
+    (function(){
+      if(REDUCED) return;
+      const cvs = document.getElementById('bg-canvas'); if(!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const DPR = Math.min(2, window.devicePixelRatio || 1);
+      function resize(){cvs.width=innerWidth*DPR; cvs.height=innerHeight*DPR; cvs.style.width=innerWidth+'px'; cvs.style.height=innerHeight+'px';}
+      resize();
+      const N_BASE= 70; let particles=[]; const COLORS=['#9beeff','#97f3c7','#ffd78a'];
+      function reset(){particles=[]; const N = Math.round(N_BASE*FX_INTENSITY); for(let i=0;i<N;i++){particles.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,vx:(Math.random()-.5)*0.3*DPR,vy:(Math.random()-.5)*0.3*DPR,r:(Math.random()*2+1)*DPR,c:COLORS[i%COLORS.length]});}}
+      reset();
+      let mx=null,my=null; window.addEventListener('mousemove',e=>{mx=e.clientX*DPR; my=e.clientY*DPR; const sp=document.querySelector('.spotlight'); if(sp) sp.style.background=`radial-gradient(400px 400px at ${e.clientX}px ${e.clientY}px, rgba(46,182,125,0.15), rgba(0,0,0,0))`;});
+      function step(){
+        ctx.clearRect(0,0,cvs.width,cvs.height);
+        for(const p of particles){p.x+=p.vx;p.y+=p.vy; if(p.x<0)p.x=cvs.width; if(p.x>cvs.width)p.x=0; if(p.y<0)p.y=cvs.height; if(p.y>cvs.height)p.y=0;}
+        // líneas por proximidad
+        for(let i=0;i<particles.length;i++){
+          const a=particles[i];
+          for(let j=i+1;j<particles.length;j++){
+            const b=particles[j];
+            const dx=a.x-b.x, dy=a.y-b.y; const d= Math.hypot(dx,dy);
+            const MAX= 180*DPR; if(d<MAX){ ctx.globalAlpha= (1-d/MAX)*0.6; ctx.strokeStyle= '#5fb7ff'; ctx.lineWidth= 0.8*DPR; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();}
+          }
+        }
+        ctx.globalAlpha=1;
+        // nodos (algunos con aro para simular moneda)
+        for(const p of particles){ ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); if(Math.random()<0.03){ ctx.strokeStyle=p.c; ctx.lineWidth=0.6*DPR; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*1.8,0,Math.PI*2); ctx.stroke(); }}
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      window.addEventListener('resize',()=>{resize(); reset();});
+      // Toggle intensidad
+      const tbtn=document.getElementById('toggleIntensidad'); if(tbtn){tbtn.addEventListener('click',()=>{FX_INTENSITY = FX_INTENSITY===1?0.6:(FX_INTENSITY===0.6?0.3:1); tbtn.textContent = `Intensidad: ${FX_INTENSITY===1?'Alta':(FX_INTENSITY===0.6?'Media':'Baja')}`; reset();});}
+    })();
+
+    // Story scrollytelling + navegación + contadores + mini‑demo
+    (function(){
+      const steps = Array.from(document.querySelectorAll('.story .step'));
+      const bar = document.getElementById('storyBar');
+      const prev = document.getElementById('prevStep');
+      const next = document.getElementById('nextStep');
+      const cta = document.querySelector('.cta-btn');
+      if(!steps.length) return;
+      let current = 0; let kpisCounted = false; let demoStarted=false;
+
+      const opts = {root:null, rootMargin:'-10% 0px -40% 0px', threshold: [.5]};
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('active');
+            current = steps.indexOf(e.target);
+            updateBar();
+            if(!REDUCED) { if(e.target.dataset.step==='3') startDemo(); if(!kpisCounted) countAll(e.target); }
+            // pulso del CTA en escena 4
+            if(cta) cta.classList.toggle('cta-pulse', e.target.dataset.step==='4');
+          }
+        });
+      }, opts);
+      steps.forEach(s=>io.observe(s));
+
+      function updateBar(){
+        const active = steps.filter(s=>s.classList.contains('active')).length;
+        const pct = Math.round((active/steps.length)*100);
+        if(bar) bar.style.width = pct+'%';
+      }
+      function go(i){ i = Math.max(0, Math.min(steps.length-1, i)); steps[i].scrollIntoView({behavior: REDUCED?'auto':'smooth', block:'center'}); }
+      prev&&prev.addEventListener('click', ()=>go(current-1));
+      next&&next.addEventListener('click', ()=>go(current+1));
+      // teclado
+      document.addEventListener('keydown',(e)=>{ if(e.key==='ArrowRight') go(current+1); if(e.key==='ArrowLeft') go(current-1); });
+      // rueda desactivada para permitir scroll natural
+
+      function countAll(node){
+        kpisCounted = true; const els = document.querySelectorAll('[data-count]');
+        els.forEach(el=>{ const target = Number(el.getAttribute('data-count')); animateCount(el, target, 900); });
+      }
+      function animateCount(el, target, dur){
+        const start = performance.now(); const from = 0;
+        function tick(t){ const p = Math.min(1, (t-start)/dur); const val = from + (target-from)*p; el.textContent = target<0? '−'+Math.abs(Math.round(val)) : Math.round(val); if(p<1) requestAnimationFrame(tick); }
+        requestAnimationFrame(tick);
+      }
+      function startDemo(){
+        if(demoStarted) return; demoStarted=true;
+        const panels = document.querySelectorAll('.mini-demo .progress span');
+        let step=0; function loop(){ if(REDUCED) return; panels.forEach((bar,i)=>{ bar.style.width = (i===step? '100%':'0%'); }); step=(step+1)%panels.length; setTimeout(loop, 1000); }
+        loop();
+      }
+      // Omitir historia
+      const skip = document.getElementById('skipStory');
+      if(skip){ skip.addEventListener('click', ()=>{ const story = document.getElementById('story'); if(story){ story.style.display='none'; } const target = document.getElementById('pillars') || document.getElementById('main-cards'); if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); } }); }
+    })();
+
+    // Carrusel de pilares
+    (function(){
+      const track = document.getElementById('pillarsTrack');
+      const prev = document.getElementById('prevSlide');
+      const next = document.getElementById('nextSlide');
+      const dotsC = document.getElementById('dots');
+      if(!track) return;
+      const slides = Array.from(track.children);
+      let idx = 0; let timer=null; const AUTO= REDUCED? 0 : 4500;
+      function go(i){ idx = (i+slides.length)%slides.length; track.scrollTo({left: track.clientWidth*idx, behavior: REDUCED? 'auto':'smooth'}); updateDots(); restart(); }
+      function updateDots(){ dotsC.innerHTML=''; slides.forEach((_,i)=>{ const b=document.createElement('button'); b.className='dot'+(i===idx?' active':''); b.setAttribute('role','tab'); b.setAttribute('aria-selected', i===idx?'true':'false'); b.addEventListener('click',()=>go(i)); dotsC.appendChild(b);}); }
+      function restart(){ if(!AUTO) return; clearInterval(timer); timer = setInterval(()=>go(idx+1), AUTO); }
+      prev&&prev.addEventListener('click',()=>go(idx-1));
+      next&&next.addEventListener('click',()=>go(idx+1));
+      let startX=0; track.addEventListener('pointerdown',e=>{startX=e.clientX; track.setPointerCapture(e.pointerId);});
+      track.addEventListener('pointerup',e=>{const dx=e.clientX-startX; if(Math.abs(dx)>40){ go(idx + (dx<0?1:-1)); }});
+      window.addEventListener('resize',()=>go(idx));
+      updateDots(); restart();
+    })();
+
+    // 1) Fondo de iconos financieros animados + parallax (doble capa)
+    (function(){
+      if(REDUCED) return;
+      const layers = document.querySelectorAll('.bg-icons');
+      if(!layers.length) return;
+
+      const paths = [
+        {d:'M2 10 L10 2 L18 10', cls:'green'}, // chevron up
+        {d:'M2 2 L18 18', cls:'cyan'},          // diag
+        {d:'M2 18 L18 2', cls:'cyan'},          // diag
+        {d:'M3 12 H17 M3 8 H14 M3 4 H10', cls:'gold'}, // bars
+        {d:'M10 3 A7 7 0 1 0 10 17 A7 7 0 1 0 10 3', cls:'green'}, // coin
+        {d:'M3 15 L8 9 L12 12 L18 5', cls:'cyan'}, // line chart
+        {d:'M5 10 H15 M10 5 V15', cls:'gold'}, // plus
+        {d:'M6 14 C8 8, 12 12, 16 6', cls:'green'} // curve
+      ];
+
+      function addIcon(svg,x,y,scale,cls,rot){
+        const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+        g.setAttribute('class', 'icon '+cls);
+        g.style.transformOrigin = 'center';
+        g.style.transform = `translate(${x}px, ${y}px) scale(${scale}) rotate(${rot}deg)`;
+        const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+        const pick = paths[Math.floor(Math.random()*paths.length)];
+        p.setAttribute('d', pick.d);
+        g.appendChild(p);
+        svg.appendChild(g);
+        return g;
+      }
+
+      const W = window.innerWidth, H = window.innerHeight;
+      const all = [];
+      layers.forEach((svg, li)=>{
+        const count = li===0 ? 120 : 60; // capa cercana y lejana
+        for(let i=0;i<count;i++){
+          const sc = li===0 ? 0.8 + Math.random()*2.0 : 0.6 + Math.random()*1.4;
+          const x = Math.random()*W, y = Math.random()*H;
+          const rot = Math.random()*360;
+          const cls = ['green','cyan','gold'][Math.floor(Math.random()*3)];
+          const el = addIcon(svg,x,y,sc,cls,rot);
+          all.push({el,x,y,sc,rot, vx:(Math.random()*0.25+0.05)*(Math.random()<.5?-1:1)*(li===0?1:0.6), vy:(Math.random()*0.2+0.03)*(Math.random()<.5?-1:1)*(li===0?1:0.6), vr:(Math.random()*0.1-0.05), layer:li});
+        }
+      });
+
+      function tick(){
+        const sy = window.scrollY||0;
+        for(const ic of all){
+          ic.x += ic.vx; ic.y += ic.vy; ic.rot += ic.vr;
+          if(ic.x < -60) ic.x = W+60; if(ic.x > W+60) ic.x = -60;
+          if(ic.y < -60) ic.y = H+60; if(ic.y > H+60) ic.y = -60;
+          const depth = ic.layer===0 ? 0.6 : 0.25;
+          ic.el.style.transform = `translate(${ic.x}px, ${ic.y + sy*depth}px) scale(${ic.sc}) rotate(${ic.rot}deg)`;
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      window.addEventListener('resize', ()=>location.reload());
+    })();
+
+    // Microinteracción CTA: confeti simple
+    (function(){
+      const btn = document.querySelector('.cta-btn'); if(!btn) return;
+      btn.addEventListener('click', ()=>{ if(REDUCED) return; confettiAt(btn); });
+      function confettiAt(el){
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width/2; const cy = rect.top + rect.height/2 + window.scrollY;
+        for(let i=0;i<24;i++) spawn(cx, cy);
+        function spawn(x,y){
+          const d=document.createElement('div');
+          d.style.position='absolute'; d.style.left=x+'px'; d.style.top=y+'px'; d.style.width='6px'; d.style.height='10px'; d.style.borderRadius='2px';
+          d.style.background=['#22d3ee','#2EB67D','#ffd78a','#97f3c7'][i%4]; d.style.pointerEvents='none'; d.style.zIndex=1000;
+          document.body.appendChild(d);
+          const ang = Math.random()*Math.PI*2; const sp = 6+Math.random()*6; const vx = Math.cos(ang)*sp, vy = Math.sin(ang)*sp - 8;
+          let a=1, y0=y; const g=0.4; const rot = Math.random()*360;
+          function tick(){ x+=vx; y+=vy; vy+=g; a-=0.02; d.style.transform=`translate(${x}px, ${y - y0}px) rotate(${rot}deg)`; d.style.opacity=String(a);
+            if(a>0) requestAnimationFrame(tick); else d.remove(); }
+          requestAnimationFrame(tick);
+        }
+      }
+    })();
+
+    // Toggle de detalle (mostrar todos los textos completos)
+    (function(){
+      const btn = document.getElementById('toggleDetalle');
+      if(!btn) return;
+      let on = false;
+      btn.addEventListener('click', ()=>{
+        on = !on;
+        document.querySelectorAll('.card').forEach(c=>{ c.classList.toggle('flipped', on); adjustHeight(c); });
+        btn.textContent = on ? 'Ocultar textos completos' : 'Ver textos completos';
+      });
+      // Mostrar información desde el inicio: primer card volteada
+      const first = document.querySelector('.card'); if(first){ first.classList.add('flipped'); adjustHeight(first); }
+    })();
+
+    // 2) Tilt 3D + flip de tarjetas (teclado y mouse) + autoflip en scroll
+    (function(){
+      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints>0);
+      const isNarrow = () => window.innerWidth < 980;
+      const cards = document.querySelectorAll('.card');
+
+      // Autoflip al entrar en viewport (mostrar texto completo sin clic)
+      const io = new IntersectionObserver((es)=>{
+        es.forEach(e=>{
+          const card = e.target; const inner = card.querySelector('.card-inner');
+          if(e.isIntersecting){
+            card.classList.add('flipped');
+            if(inner) inner.style.transform='rotateY(180deg)';
+            adjustHeight(card);
+          } else {
+            card.classList.remove('flipped');
+            if(inner) inner.style.transform='rotateY(0)';
+            adjustHeight(card);
+          }
+        });
+      }, {root:null, rootMargin:'0px 0px -20% 0px', threshold:0.35});
+      cards.forEach(c=>io.observe(c));
+
+      // Tilt solo en desktop y sin reduced motion
+      if(!(REDUCED || isTouch || isNarrow())){
+        cards.forEach(card=>{
+          const inner = card.querySelector('.card-inner');
+          const MAX = 10; // grados
+          function onMove(e){
+            const r = card.getBoundingClientRect();
+            const cx = r.left + r.width/2, cy = r.top + r.height/2;
+            const x = (e.clientX - cx) / (r.width/2);
+            const y = (e.clientY - cy) / (r.height/2);
+            const rx = (y * MAX);
+            const ry = (-x * MAX);
+            inner.style.transform = `rotateY(${ry}deg) rotateX(${rx}deg)` + (card.classList.contains('flipped') ? ' rotateY(180deg)' : '');
+            card.style.transform = 'translateZ(6px)';
+          }
+          function onLeave(){
+            inner.style.transform = (card.classList.contains('flipped') ? 'rotateY(180deg)' : 'rotateY(0)');
+            card.style.transform='translateZ(0)';
+          }
+          card.addEventListener('mousemove', onMove);
+          card.addEventListener('mouseleave', onLeave);
+        });
+      }
+
+      // Ajuste de altura a contenido visible (front/back)
+      window.addEventListener('resize', ()=>{ cards.forEach(adjustHeight); });
+    })();
+
+    // Utilidad: ajustar altura de carta al contenido visible
+    function adjustHeight(card){
+      if(!card) return; const back = card.querySelector('.back'); const front = card.querySelector('.front');
+      const face = card.classList.contains('flipped') ? back : front;
+      if(!face) return; // medida del contenido
+      // Clonar para medir con layout fuera de transform 3D
+      const clone = face.cloneNode(true); clone.style.position='static'; clone.style.transform='none'; clone.style.opacity='0'; clone.style.pointerEvents='none';
+      clone.style.height='auto'; clone.style.display='block'; clone.style.visibility='hidden';
+      const tmp = document.createElement('div'); tmp.style.position='absolute'; tmp.style.left='-9999px'; tmp.style.top='-9999px'; tmp.style.width = card.clientWidth+'px';
+      tmp.appendChild(clone); document.body.appendChild(tmp);
+      const h = clone.scrollHeight + 20; // margen de seguridad
+      document.body.removeChild(tmp);
+      card.style.height = h+'px';
+    }
+
+    // 3) Scroll con offset por header sticky
+    (function(){
+      const header = document.querySelector('.header');
+      const offset = () => (header?.offsetHeight || 76) + 12;
+
+      function scrollWithOffset(targetId){
+        const el = document.getElementById(targetId);
+        if(!el) return;
+        const top = el.getBoundingClientRect().top + window.pageYOffset - offset();
+        window.scrollTo({top, behavior:'smooth'});
+      }
+
+      document.addEventListener('click', (e)=>{
+        const a = e.target.closest('a[href^="#"]');
+        if(!a) return;
+        const id = a.getAttribute('href').slice(1);
+        if(!id) return;
+        if(document.getElementById(id)){
+          e.preventDefault();
+          scrollWithOffset(id);
+          history.pushState(null, '', '#'+id);
+        }
+      });
+
+      window.addEventListener('load', ()=>{
+        if(location.hash){
+          const id = location.hash.replace('#','');
+          setTimeout(()=>scrollWithOffset(id), 10);
+        }
+      });
+    })();
+  </script>
+  <script>
+  // Sanitizar enlaces: bloquear javascript: y forzar noopener
+  (function(){
+    document.addEventListener('click',function(e){
+      const a=e.target.closest('a[href]'); if(!a) return;
+      const href=a.getAttribute('href')||'';
+      if(/^\s*javascript:/i.test(href)){ e.preventDefault(); return; }
+      if(a.target==='_blank'){ a.rel='noopener noreferrer'; }
+    },{capture:true});
+  })();
+  </script>
+  <!-- Verificación de autenticación eliminada -->
+</script>
+  <script>
+  (function(){
+    function initSimpleChatWidget(){
+      if(document.getElementById('cbWidget')) return;
+      const style=document.createElement('style');
+      style.textContent=`
+      #cbWidget{position:fixed;right:18px;bottom:18px;z-index:9999}
+      #cbBtn{appearance:none;border:0;background:linear-gradient(180deg,#176a4a,#11533a);color:#ecfff7;border-radius:999px;padding:12px 16px;font-weight:800;box-shadow:0 10px 22px rgba(0,0,0,.35);cursor:pointer}
+      #cbPanel{position:fixed;right:18px;bottom:76px;width:min(380px,92vw);max-height:70vh;background:#0b0f14;border:1px solid #1e2835;border-radius:14px;display:none;grid-template-rows:auto 1fr auto;box-shadow:0 10px 32px rgba(0,0,0,.45)}
+      #cbHdr{padding:10px 12px;border-bottom:1px solid #1e2835;font-weight:800}
+      #cbList{padding:12px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+      .cb-msg{white-space:pre-wrap;line-height:1.3;border-radius:10px;padding:10px 12px;max-width:92%}
+      .cb-u{align-self:flex-end;background:#16324c;border:1px solid #22486c}
+      .cb-a{align-self:flex-start;background:#12201a;border:1px solid #1e3a2e}
+      #cbInp{display:flex;gap:8px;padding:10px;border-top:1px solid #1e2835}
+      #cbText{flex:1;background:#0e141c;border:1px solid #1e2835;border-radius:10px;padding:10px;color:#e6eef8}
+      #cbSend{appearance:none;border:1px solid #1e2835;background:#121922;color:#e6eef8;border-radius:10px;padding:10px 12px;cursor:pointer}
+      `;
+      document.head.appendChild(style);
+      const wrap=document.createElement('div');wrap.id='cbWidget';
+      wrap.innerHTML=`<button id="cbBtn" aria-expanded="false">Chat</button>
+      <div id="cbPanel" role="dialog" aria-label="Asistente financiero">
+        <div id="cbHdr">Asistente</div>
+        <div id="cbList"></div>
+        <div id="cbInp"><input id="cbText" placeholder="Escribe tu pregunta..."/><button id="cbSend">Enviar</button></div>
+      </div>`;
+      document.body.appendChild(wrap);
+      const panel=document.getElementById('cbPanel');
+      const btn=document.getElementById('cbBtn');
+      const list=document.getElementById('cbList');
+      const text=document.getElementById('cbText');
+      const send=document.getElementById('cbSend');
+      const push=(who,txt)=>{const d=document.createElement('div');d.className='cb-msg '+(who==='u'?'cb-u':'cb-a');d.textContent=txt;list.appendChild(d);list.scrollTop=list.scrollHeight;};
+      const stream=(txt)=>new Promise(res=>{let i=0;const d=document.createElement('div');d.className='cb-msg cb-a';list.appendChild(d);const t=setInterval(()=>{i=Math.min(i+Math.max(5,Math.floor(txt.length/60)),txt.length);d.textContent=txt.slice(0,i);list.scrollTop=list.scrollHeight;if(i>=txt.length){clearInterval(t);res();}},20);});
+      const intent=(q)=>{
+        const s=q.toLowerCase();
+        if(/ayuda|help|comandos/.test(s)) return 'Comandos: interpretación, resumen global, razones, cuentas, recomendaciones, alertas. Si quieres el análisis completo, abre la aplicación FINBOT.';
+        if(/app|finbot|abrir/.test(s)) return 'Abrí la app FINBOT en la sección IA para usar el análisis completo.';
+        return 'Soy el asistente del landing. Escribe "ayuda" para ver comandos o abre la app para análisis detallado.';
+      };
+      const onSend=async()=>{const q=(text.value||'').trim();if(!q)return;push('u',q);text.value='';await stream(intent(q));};
+      btn.addEventListener('click',()=>{const v=panel.style.display==='grid';panel.style.display=v?'none':'grid';btn.setAttribute('aria-expanded',String(!v));if(!v&&list.children.length===0){push('a','Hola, soy tu asistente. Escribe "ayuda".');}});
+      send.addEventListener('click',onSend);
+      text.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();onSend();}});
+    }
+    window.addEventListener('DOMContentLoaded',function(){
+      if(typeof window.initChatbotWidget==='function'){
+        try{window.initChatbotWidget();return;}catch(e){}
+      }
+      initSimpleChatWidget();
+    });
+  })();
+  </script>
+</body>
+</html>
