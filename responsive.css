@@ -1,0 +1,251 @@
+/* Estilos Responsive para FINBOT Web */
+
+/* Estilos para el menú móvil */
+.mobile-menu-btn {
+  display: none; /* Oculto por defecto en pantallas grandes */
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  background: rgba(10, 37, 64, 0.8);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+
+/* Mostrar botón en móviles */
+@media (max-width: 1023px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* Ocultar navegación en móviles por defecto */
+  #main-nav {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: rgba(10, 37, 64, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 16px;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 999;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #main-nav.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  #main-nav ul {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #main-nav a {
+    display: block;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  #main-nav a:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Estilos generales para móviles */
+@media (max-width: 767px) {
+  /* Ajustes de base */
+  :root {
+    --header-h: 60px;
+  }
+  
+  /* Header */
+  .header {
+    height: var(--header-h);
+    padding: 0 12px;
+  }
+  
+  .logo-img {
+    height: 36px;
+  }
+  
+  .site-title {
+    font-size: 16px;
+  }
+  
+  .site-sub {
+    font-size: 10px;
+  }
+  
+  /* Menú de navegación */
+  nav ul {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: var(--bg2);
+    flex-direction: column;
+    padding: 16px;
+    gap: 8px;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  nav.active ul {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  /* Botón de menú móvil */
+  .mobile-menu-btn {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+  }
+  
+  /* Contenedores */
+  .container, .wrap {
+    padding: 0 12px;
+  }
+  
+  /* Hero section */
+  .hero {
+    padding: 60px 0 40px;
+  }
+  
+  .hero h1 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+  
+  .hero p {
+    font-size: 16px;
+  }
+  
+  /* Tarjetas */
+  .card {
+    padding: 16px;
+  }
+  
+  /* Grids */
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  /* Formularios */
+  input, select, textarea, button, .btn {
+    width: 100%;
+  }
+  
+  /* Tablas */
+  .scroll {
+    max-height: 300px;
+  }
+  
+  /* Ajustes específicos para gráficos */
+  .chart-container, .contenedor-grafico {
+    padding: 12px;
+  }
+  
+  .chart-wrapper, .contenedor-canvas {
+    height: 300px;
+  }
+  
+  /* Footer */
+  footer {
+    padding: 24px 12px;
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .chart-wrapper, .contenedor-canvas {
+    height: 350px;
+  }
+}
+
+/* Pantallas grandes */
+@media (min-width: 1024px) {
+  .mobile-menu-btn {
+    display: none;
+  }
+}
+
+/* Ajustes para modo retrato en móviles */
+@media (max-width: 767px) and (orientation: portrait) {
+  :root {
+    --header-h: 56px;
+  }
+  
+  .hero {
+    min-height: calc(100vh - var(--header-h));
+  }
+}
+
+/* Ajustes para modo paisaje en móviles */
+@media (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --header-h: 50px;
+  }
+  
+  .hero {
+    padding: 40px 0;
+  }
+  
+  .hero h1 {
+    font-size: 24px;
+  }
+  
+  .hero p {
+    font-size: 14px;
+  }
+}
+
+/* Ajustes para dispositivos con pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .site-title {
+    font-size: 14px;
+  }
+  
+  .site-sub {
+    font-size: 9px;
+  }
+  
+  .logo-img {
+    height: 32px;
+  }
+}
+
+/* Mejoras de accesibilidad en modo toque */
+@media (hover: none) {
+  .btn, button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

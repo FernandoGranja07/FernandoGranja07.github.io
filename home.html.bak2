@@ -352,7 +352,7 @@
           <span class="site-sub">NICARAGUA · UNI RUSB 2025</span>
         </div>
       </a>
-      <nav id="main-nav" role="navigation" aria-label="Secciones del sitio">
+      <nav role="navigation" aria-label="Secciones del sitio">
         <ul>
           <li><a href="#cta">FINBOT</a></li>
           <li><a href="aprende.html">APRENDIZAJE</a></li>
@@ -366,11 +366,6 @@
       </nav>
     </div>
   </header>
-
-  <!-- Botón de menú móvil -->
-  <button class="mobile-menu-btn" aria-label="Menú" aria-expanded="false" aria-controls="main-nav">
-    <span>☰</span>
-  </button>
 
   <a id="top" style="position:absolute; inset:0 auto auto 0; width:0; height:0;" aria-hidden="true"></a>
 
@@ -1095,33 +1090,6 @@
       initSimpleChatWidget();
     });
   })();
-  </script>
-  
-  <!-- Script para el menú móvil -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const menuBtn = document.querySelector('.mobile-menu-btn');
-      const nav = document.getElementById('main-nav');
-      
-      if (menuBtn && nav) {
-        menuBtn.addEventListener('click', function() {
-          const isExpanded = this.getAttribute('aria-expanded') === 'true';
-          this.setAttribute('aria-expanded', !isExpanded);
-          nav.classList.toggle('active');
-        });
-      }
-      
-      // Cerrar menú al hacer clic en un enlace
-      const navLinks = document.querySelectorAll('#main-nav a');
-      navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          if (window.innerWidth <= 1023) {
-            nav.classList.remove('active');
-            menuBtn.setAttribute('aria-expanded', 'false');
-          }
-        });
-      });
-    });
   </script>
 </body>
 </html>
