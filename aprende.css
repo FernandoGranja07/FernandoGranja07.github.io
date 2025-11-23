@@ -1,0 +1,109 @@
+/* =========================
+   RECURSOS — look más atractivo
+   ========================= */
+#recursos_completos h2{
+  display:flex; align-items:center; gap:10px;
+}
+
+#recursos_completos .card.tilt:first-of-type{
+  background: linear-gradient(180deg, rgba(80,250,200,.08), rgba(255,255,255,0));
+  border:1px solid rgba(120,200,255,.12);
+}
+
+/* Grid responsive pro */
+#grid_slides{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap:16px;
+}
+
+/* Tarjeta recurso */
+.resource-card{
+  position:relative;
+  padding:16px;
+  border-radius:18px;
+  background: rgba(15,18,28,.9);
+  border:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  min-height: 190px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+/* borde degradado arriba */
+.resource-card{
+  position:relative;
+  padding:16px;
+  border-radius:18px;
+  background: rgba(15,18,28,.9);
+  border:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+}
+
+.resource-card::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; right:0;
+  height:2px;                      /* solo línea arriba */
+  background: linear-gradient(90deg, #4fffd4, #6fb3ff, #b36bff);
+  opacity:.9;
+  pointer-events:none;
+}
+
+/* icono circular */
+.resource-icon{
+  width:48px; height:48px;
+  display:grid; place-items:center;
+  border-radius:12px;
+  background: rgba(79,255,212,.12);
+  border:1px solid rgba(79,255,212,.25);
+  font-size:22px;
+  margin-bottom:10px;
+}
+
+/* etiqueta mini */
+.resource-tag{
+  display:inline-block;
+  font-size:.72rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#a9b3c7;
+  background: rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  padding:4px 8px;
+  border-radius:999px;
+  margin-bottom:8px;
+}
+
+.resource-title{
+  font-size:1.05rem;
+  line-height:1.25;
+  min-height:2.6em; /* dos líneas */
+  margin:0 0 8px 0;
+}
+
+/* botones */
+.resource-actions{
+  display:flex; gap:10px; margin-top:8px;
+}
+
+.resource-actions .btn{
+  flex:1; text-align:center; justify-content:center;
+  padding:10px 12px; border-radius:999px;
+}
+
+/* botón principal */
+.btn-primary{
+  background: linear-gradient(90deg, rgba(79,255,212,.18), rgba(111,179,255,.18));
+  border:1px solid rgba(79,255,212,.45);
+  font-weight:700;
+}
+.btn-primary:hover{ filter: brightness(1.08); }
+
+/* secundario */
+.btn-ghost{
+  background: transparent;
+  border:1px solid rgba(255,255,255,.12);
+}
