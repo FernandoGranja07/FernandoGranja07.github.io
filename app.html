@@ -49,21 +49,95 @@
 
 
   <nav class="tabs row wrap">
-    <button class="tab-btn active" data-tab="datos">Datos</button>
-    <button class="tab-btn" data-tab="analisis">Análisis</button>
-    <button class="tab-btn" data-tab="razones">Razones</button>
-    <button class="tab-btn" data-tab="valoracion">Valoración</button>
-    <button class="tab-btn" data-tab="eoaf">EOAF</button>
-    <button class="tab-btn" data-tab="efe">EFE</button>
-    <button class="tab-btn" data-tab="dupont">DuPont</button>
-    <button class="tab-btn" data-tab="ia">IA</button>
-    <button class="tab-btn" data-tab="global">Resumen Global</button>
-    <button class="tab-btn" data-tab="reportes">Reportes</button>
-    <button class="tab-btn" data-tab="graficos">Gráficos</button>
-    <button class="tab-btn" data-tab="proforma">Proforma</button>
-    <button class="tab-btn" data-tab="exportar">Exportar</button>
-    <button class="tab-btn" data-tab="almacen">Almacenamiento</button>
-  </nav>
+  <div class="finanzas-dropdown" id="finanzasDropdown">
+    <button
+      class="finanzas-dropdown-btn"
+      id="finanzasDropdownBtn"
+      type="button"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      Finanzas I <span class="caret">▾</span>
+    </button>
+
+    <div class="finanzas-dropdown-menu" id="finanzasDropdownMenu" role="menu">
+      <button class="tab-btn active" data-tab="datos" type="button" role="menuitem">Datos</button>
+      <button class="tab-btn" data-tab="analisis" type="button" role="menuitem">Análisis</button>
+      <button class="tab-btn" data-tab="razones" type="button" role="menuitem">Razones</button>
+      <button class="tab-btn" data-tab="valoracion" type="button" role="menuitem">Valoración</button>
+      <button class="tab-btn" data-tab="eoaf" type="button" role="menuitem">EOAF</button>
+      <button class="tab-btn" data-tab="efe" type="button" role="menuitem">EFE</button>
+      <button class="tab-btn" data-tab="dupont" type="button" role="menuitem">DuPont</button>
+      <button class="tab-btn" data-tab="ia" type="button" role="menuitem">IA</button>
+      <button class="tab-btn" data-tab="global" type="button" role="menuitem">Resumen Global</button>
+      <button class="tab-btn" data-tab="reportes" type="button" role="menuitem">Reportes</button>
+      <button class="tab-btn" data-tab="graficos" type="button" role="menuitem">Gráficos</button>
+      <button class="tab-btn" data-tab="proforma" type="button" role="menuitem">Proforma</button>
+      <button class="tab-btn" data-tab="exportar" type="button" role="menuitem">Exportar</button>
+      <button class="tab-btn" data-tab="almacen" type="button" role="menuitem">Almacenamiento</button>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Dropdown Finanzas I */
+  .finanzas-dropdown{
+    position: relative;
+    display: inline-block;
+  }
+
+  .finanzas-dropdown-btn{
+    background: #0f141b;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: filter .2s ease;
+  }
+  .finanzas-dropdown-btn:hover{ filter: brightness(1.05); }
+
+  .finanzas-dropdown-menu{
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    z-index: 999;
+    background: var(--card-bg, #0f141b);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    display: none;
+    box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  }
+
+  .finanzas-dropdown.open .finanzas-dropdown-menu{
+    display: block;
+  }
+
+  /* para que los items se vean tipo lista */
+  .finanzas-dropdown-menu .tab-btn{
+    width: 100%;
+    text-align: left;
+    border-radius: 10px;
+    margin: 2px 0;
+  }
+
+  /* móvil: menú se apila abajo sin flotar */
+  @media (max-width: 640px){
+    .finanzas-dropdown-menu{
+      position: static;
+      box-shadow: none;
+      margin-top: 8px;
+    }
+  }
+</style>
+
+
 
   <main>
     <!-- DATOS -->
@@ -1163,6 +1237,41 @@
 <script src="./app.js"></script>
 <script src="./proforma.js"></script>
 <script src="./export.js"></script>
+
+
+<script>
+(function(){
+  const dd = document.getElementById('finanzasDropdown');
+  if(!dd) return;
+
+  const btn = document.getElementById('finanzasDropdownBtn');
+
+  function openClose(){
+    dd.classList.toggle('open');
+    btn.setAttribute('aria-expanded', dd.classList.contains('open'));
+  }
+
+  function close(){
+    dd.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    openClose();
+  });
+
+  // Cerrar al hacer click fuera
+  document.addEventListener('click', close);
+
+  // Cerrar cuando seleccionas una opción
+  dd.querySelector('.finanzas-dropdown-menu').addEventListener('click', (e)=>{
+    const item = e.target.closest('.tab-btn');
+    if(item) close();
+  });
+})();
+</script>
+
 
 </body>
 </html>
